@@ -1,6 +1,6 @@
 import unittest
 import Test2Case
-from testharness import TestCaseHelper
+import TestCaseHelper
 
 def injectParam(param,tepar) :
     Test2Case.param = param
