@@ -29,6 +29,13 @@ import tempfile
 import time
 import unittest
 
+def _getKey(cf, key):
+    if cf == None : return None
+    ikey = osPrefix() + "." + key
+    if cf.has_key(ikey): return cf[ikey]
+    if cf.has_key(key): return cf[key]
+    return None
+
 def osPrefix():
     """Returns system prefix
 
@@ -218,8 +225,7 @@ class OneTestParam:
           Value or None  if property not defined
 
         """
-        if self.cf.has_key(key): return self.cf[key]
-        return None
+        return _getKey(self.cf, key)
 
     def getDescr(self):
         """ Getter for description property
@@ -332,9 +338,7 @@ class TestParam:
           value or None if property not defined
 
         """
-        if self.cf == None : return None
-        if self.cf.has_key(key): return self.cf[key]
-        return None
+        return _getKey(self.cf, key)
 
     def getCustomC(self):
         """ Getter for 'customC' reference
