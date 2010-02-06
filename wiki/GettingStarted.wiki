@@ -1,16 +1,15 @@
-# Getting started with Boa test framework
+Getting started with Boa test framework
 
 = Introduction =
 
-Boa is very simple test framework written in Python. It is an extension of Python's unit test package. It consists only of two Python's modules and several classes and methods.
+Boa is very simple test framework written in Python. Here is described how to download and run framework using samples provided.
 
+= Prerequisites =
 
+Host machine should have Python installed. Almost every linux distribution has Python as a part of standard configuration.
 
+Framework was tested with Python 2.4. Was not tested with Python 3.x (future).
 
+== Instalation ==
 
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+Checkout: http://code.google.com/p/boatester/source/checkout
