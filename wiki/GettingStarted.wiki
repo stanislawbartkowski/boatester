@@ -44,6 +44,12 @@ export PYTHONPATH=boatester-read-only/BoaHarnes
 python boatester-read-only/TestBoaHarness/src/testboaharness.py boatester-read-only/TestBoaHarness/src/TestResource /tmp/rundir all x
 }}}
 
+On Windows 
+{{{
+set PYTHONPATH=C:\TEMP\boatester-read-only\BoaHarness\src\testharness
+C:\python26\python boatester-read-only\TestBoaHarness\src\testboaharness.py boatester-read-only\TestBoaHarness\src\TestResource c:\temp\rundir all x
+}}}
+
 Output (if successful )
 
 {{{
