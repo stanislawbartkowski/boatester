@@ -1,8 +1,11 @@
-#summary One-sentence summary of this page.
+# Getting started with Boa test framework
 
 = Introduction =
 
-Add your content here.
+Boa is very simple test framework written in Python. It is an extension of Python's unit test package. It consists only of two Python's modules and several classes and methods.
+
+
+
 
 
 = Details =
