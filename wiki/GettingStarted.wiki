@@ -13,3 +13,46 @@ Framework was tested with Python 2.4. Was not tested with Python 3.x (future).
 == Instalation ==
 
 Checkout: http://code.google.com/p/boatester/source/checkout
+
+Following directory structure should be created.
+
+{{{
+ boatester-read-only/BoaHarness
+ boatester-read-only/BoaHarness/src
+ boatester-read-only/BoaHarness/src/testharness
+ boatester-read-only/BoaHarness/src/testharness/TestCaseHelper.py
+ boatester-read-only/BoaHarness/src/testharness/TestCaseHelper.pyc
+ boatester-read-only/BoaHarness/src/testharness/__init__.py
+ boatester-read-only/BoaHarness/src/testharness/TestBoa.py
+ boatester-read-only/BoaHarness/src/testharness/__init__.pyc
+ boatester-read-only/BoaHarness/src/testharness/TestBoa.pyc
+
+ boatester-read-only/TestBoaHarness
+ boatester-read-only/TestBoaHarness/src
+  ...
+
+}}}
+
+Two packages are extracted. BoaHarness contains Boa test framework. TestBoaHarness contains some tests and samples. To run user tests only BoaHarness package is necessary.
+
+To run samples:
+
+On Linux (assuming that packages were checkedout into current directory)
+
+{{{
+export PYTHONPATH=boatester-read-only/BoaHarnes
+python boatester-read-only/TestBoaHarness/src/testboaharness.py boatester-read-only/TestBoaHarness/src/TestResource /tmp/rundir all x
+}}}
+
+Output (if successful )
+
+{{{
+dirres  run.sh
+setUp
+testCase1
+setUp
+Test number 2
+testCase2
+=========================
+TEST PASSED  number of tests : 3
+}}}
