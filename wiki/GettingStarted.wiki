@@ -70,12 +70,19 @@ TEST PASSED  number of tests : 3
 
 Following terms will be used:
 
- * BoaTestRunner : test framework, test harness. Executes tests and evaluates result.
- * Test, test case : executed by BoaTestRunner. Should provide test result: passed or failed.
- * Test case resource : directory containing all data, scripts, files necessary for test case to be run. Should be platform independent. Should be also "directory independent". 
- * Test suite : collection (subdirectories) of test case resources.
- * Common test resources : collection of data used by more then one test case. Using of any common resource (subdirectory) is declarative.
- * Run test directory : directory where test are performed. Directory is cleared at the beginning.
+ * *BoaTestRunner* : test framework, test harness. Executes tests and evaluates result.
+
+ * *Test*, *test case* : executed by BoaTestRunner. Should provide test result: passed or failed.
+
+ * *Test case resource* : directory containing all data, scripts, files necessary for test case to be run. Should be platform independent. Should be also "directory independent", cannot assume any absolute path.
+
+ * *Test suite* : collection (subdirectories) of test case resources. 
+
+ * *Common test resources* : collection of data used by more then one test case. Using of any common resource (subdirectory) is declarative.
+
+ * *Running test directory* : directory where test are performed. Directory is cleared at the beginning.
+
+ * *Test case method, test case handler* : method for running test. Two methods are predefined (Python TestSuite object) and command. Custom test case handler can be defined.
 
 
 == How tests are organized ==
@@ -84,7 +91,7 @@ Every test (test case) should be independent and repeatable. BoaTestRunner does 
 
 Every test is a subdirectory in TestSuite directory. Test subdirectory should contain all resource needed to run test and elaborate test result. It is possible (although not necessary) to have a directory with common resources used by more than one test.
 
-Test case subdirectory name should follow pattern: test{number} e.g test1, test2 .. test12 ... In directory BoaTestRunner is looking for test.properties file containing some information on test. 
+Test case subdirectory name should follow pattern: _test{number}_ e.g test1, test2 .. test12 ... BoaTestRunner is looking for test.properties file containing some information on test. 
 
 Example:
 
@@ -113,6 +120,16 @@ SomeData could contain additional resources used by tests. Usage of this resourc
 
 To add new test case simply create next directory (e.g Test3), lay down proper test.properties file and all files and directory necessary to run the test. New test case will be automatically discovered by BoaTestRunner.
 
-== How tests are executed ==
+== How test suite is executed ==
 
-BoaTestRunner is using additional directory to run test ("run directory")
+ # Analyze test suite directory. Subdirectories having _test_ in their names are taken and test.properties file is read. List of test case candidates is created.
+ # Executes test cases: basing on parameters all tests can be run, only one test or tests starting from some point. Gathers result of every test cases.
+ # Print test suite result: number of tests executed, passed, failed.
+
+== How one test case is executed ==
+
+ # Clears running test directory.
+ # If using of common test resource is declared copies resource to running test directory
+ # Copies all test case resource to running test directory
+ # Runs test case using proper test case handler.
+ # Propagate test result (passed, failed) to BoaTestRunner.
