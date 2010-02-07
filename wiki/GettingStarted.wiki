@@ -1,10 +1,12 @@
-Getting started with Boa test framework
+Getting started with BoaTestRunner - just next test framework.
 
-= Introduction =
+== Introduction ==
 
-Boa is very simple test framework written in Python. Here is described how to download and run framework using samples provided.
+BoaTestRunner is very simple test framework written in Python. It is an extension to standard Python test framework PyUnit.
 
-= Prerequisites =
+In this document is described how to download and install BoaTestRunner and how to created and developed test cases.
+
+== Prerequisites ==
 
 Host machine should have Python installed. Almost every linux distribution has Python as a part of standard configuration.
 
@@ -33,11 +35,11 @@ Following directory structure should be created.
 
 }}}
 
-Two packages are extracted. BoaHarness contains Boa test framework. TestBoaHarness contains some tests and samples. To run user tests only BoaHarness package is necessary.
+Two packages are extracted. BoaHarness contains BoaTestRunner executable codes. TestBoaHarness contains some tests and samples. To execute tests only BoaHarness package is necessary.
 
 To run samples:
 
-On Linux (assuming that packages were checkedout into current directory)
+On Linux (assuming that packages were checked-out into current directory)
 
 {{{
 export PYTHONPATH=boatester-read-only/BoaHarnes
@@ -62,3 +64,43 @@ testCase2
 =========================
 TEST PASSED  number of tests : 3
 }}}
+
+
+== How tests are organized ==
+
+Every test (test case) should be independent and repeatable. BoaTestRunner does not support test dependency e.g. next test case is using the output of the previous test. Test could be run in any order.
+
+Every test is a subdirectory in TestSuite directory. Test subdirectory should contain all resource needed to run test and elaborate test result. It is possible (although not necessary) to have a directory with common resources used by more than one test.
+
+Test case subdirectory name should follow pattern: test{number} e.g test1, test2 .. test12 ... In directory BoaTestRunner is looking for test.properties file containing some information on test. 
+
+Example:
+
+{{{
+TestResource
+  Test1
+    test.properties
+    run.sh
+    sample
+      file1
+      file2
+  Test2
+    test.properties
+    testdata.txt
+    testinput.log
+  SomeData
+    subdir1
+    subdir2
+}}}
+
+In the directory structure above two test cases will be run: Test1 and Test2. Directory SomeData will be omitted.
+
+Only Test1\test.properties and Test2\test.properties files are required by BoaTestRunner framework. Additional files in this directories are used by test case only. 
+
+SomeData could contain additional resources used by tests. Usage of this resource should be declared in test.properties file. By default only files in test subdirectory are used.
+
+To add new test case simply create next directory (e.g Test3), lay down proper test.properties file and all files and directory necessary to run the test. New test case will be automatically discovered by BoaTestRunner.
+
+== How tests are executed ==
+
+BoaTestRunner is using additional directory to run test. 
