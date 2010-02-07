@@ -82,7 +82,7 @@ Following terms will be used:
 
  * *Running test directory* : directory where test are performed. Directory is cleared at the beginning.
 
- * *Test case method, test case handler* : method for running test. Two methods are predefined (Python TestSuite object) and command. Custom test case handler can be defined.
+ * *Test case method, test case handler* : reusable method for running test. Two methods are predefined (Python TestSuite object and command). Custom test case handler can be defined.
 
 
 == How tests are organized ==
