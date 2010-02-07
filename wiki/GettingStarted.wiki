@@ -66,6 +66,18 @@ TEST PASSED  number of tests : 3
 }}}
 
 
+== Vocabulary ==
+
+Following terms will be used:
+
+ * BoaTestRunner : test framework, test harness. Executes tests and evaluates result.
+ * Test, test case : executed by BoaTestRunner. Should provide test result: passed or failed.
+ * Test case resource : directory containing all data, scripts, files necessary for test case to be run. Should be platform independent. Should be also "directory independent". 
+ * Test suite : collection (subdirectories) of test case resources.
+ * Common test resources : collection of data used by more then one test case. Using of any common resource (subdirectory) is declarative.
+ * Run test directory : directory where test are performed. Directory is cleared at the beginning.
+
+
 == How tests are organized ==
 
 Every test (test case) should be independent and repeatable. BoaTestRunner does not support test dependency e.g. next test case is using the output of the previous test. Test could be run in any order.
@@ -103,4 +115,4 @@ To add new test case simply create next directory (e.g Test3), lay down proper t
 
 == How tests are executed ==
 
-BoaTestRunner is using additional directory to run test. 
+BoaTestRunner is using additional directory to run test ("run directory")
