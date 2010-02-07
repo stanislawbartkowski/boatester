@@ -133,3 +133,5 @@ To add new test case simply create next directory (e.g Test3), lay down proper t
  # Copies all test case resource to running test directory
  # Runs test case using proper test case handler.
  # Propagate test result (passed, failed) to BoaTestRunner.
+
+== To be continued ==
