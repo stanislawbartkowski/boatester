@@ -1,6 +1,6 @@
 Getting started with BoaTestRunner - just next test framework.
 
-<wiki:toc max_depth="2" />
+<wiki:toc max_depth="3" />
 
 = Introduction =
 
@@ -203,7 +203,11 @@ python $HOME/runtest.py $HOME/mytestsuite /tmp/rundir all x
 
 == Create first test  case ==
 
-Create $HOME/mytestsuit/test1 directory
+=== Create test case directory ===
+Create $HOME/mytestsuit/test1 and dir subdirectory
+Create empty $HOME/mytestsuit/test1/dir/file1.txt file
+
+=== Create test.properties file ===
 
 Create $HOME/mytestsuit/test1/test.properties file
 
@@ -231,3 +235,48 @@ Explanation:
  * windows.command
   * The same for windows system
 
+=== Create test script ===
+
+Create $HOME/mytestsuite/test/dir/run.sh script file.
+
+{{{
+#!/bin/sh
+if ! test -d out;  then exit 1; fi
+if test -f out/file1.txt; then exit 0; fi
+exit 1
+}}}
+
+Self descriptive !
+
+=== Summary ===
+
+Test resource directory should look like:
+
+{{{
+$HOME/mytestsuite/test1
+                     run.sh
+                     test.properties
+                   - dir
+                      file.txt
+}}}
+
+Before launching test script test running directory looks like:
+
+{{{
+/tmp/rundir
+       run.sh
+       test.properties
+     - out
+         file1.txt
+}}}
+
+=== Run your first test suite ! ===
+
+{{{
+./run.sh
+
+=========================
+TEST PASSED  number of tests : 1
+}}}
+
+Congratulations !
