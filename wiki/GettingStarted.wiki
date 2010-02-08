@@ -46,7 +46,7 @@ To run samples:
 On Linux (assuming that packages were checked-out into current directory)
 
 {{{
-export PYTHONPATH=boatester-read-only/BoaHarnes
+export PYTHONPATH=boatester-read-only/BoaHarnes/src/testharness
 python boatester-read-only/TestBoaHarness/src/testboaharness.py boatester-read-only/TestBoaHarness/src/TestResource /tmp/rundir all x
 }}}
 
@@ -142,7 +142,7 @@ To add new test case simply create next directory (e.g Test3), lay down proper t
 
 == Example ==
 
-We want to create two test cases. First uses one test resource : file and test if this file is copied properly, the second is using also one common resource (the second plan). The expected result for first test is to have one file as resource, the expected result for the second test case is to have two files.
+We want to create two test cases. First uses one test resource : file and test if this file is copied properly, the second is using also one common resource (another file). The expected result for first test is to have one file as resource, the expected result for the second test case is to have two files.
 
 == Plan your test suite structure ==
 
@@ -155,5 +155,79 @@ We want to create two test cases. First uses one test resource : file and test i
 
 == Create test launcher (Python module) ==
 
+Copy testboaharness.py module (from directory: boatester-read-only/TestBoaHarness/src). Assume that this file name is runtest.py. This module assumes that test suite resource is the same as common resource dirextory.
 
+Additional information: one can get more detailed information by uncommenting line with logging settings.
+
+{{{
+import logging
+from TestBoa import *
+from TestCaseHelper import *
+
+#LOG_FILENAME = '/tmp/testlogging.out'
+#logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG)
+#logging.basicConfig(level=logging.INFO)
+#logging.basicConfig(level=logging.DEBUG)
+
+def printhelp():
+    print "Usage:"
+    print "runtest /res dir/ /run dir/ /spec/ /testid/"
+
+if __name__ == "__main__":
+    if len(sys.argv) != 5:
+        printhelp()
+        sys.exit(4)
+    resource = sys.argv[1]
+    rundir = sys.argv[2]
+    testspec = sys.argv[3]
+    testid = sys.argv[4]
+    globresource = resource
+    propfile = None
+    factory = TestCaseFactory()
+    suiteparam = RunSuiteParam(factory, None, propfile, globresource, resource, rundir)
+    try:
+        runSuite(suiteparam, testspec, testid)
+    except Exception, e:
+        print e
+}}}
+
+== Create shell script to start tests ==
+
+Assume that BoasTestRunner executable are extracted into $HOME/checkout directory. testrun.py module file is created in $HOME directory
+
+{{{
+#!/bin/sh
+export PYTHONPATH=$HOME/checkout/boatester-read-only/BoaHarness/src/testharness
+python $HOME/runtest.py $HOME/mytestsuite /tmp/rundir all x
+}}}
+
+== Create first test  case ==
+
+Create $HOME/mytestsuit/test1 directory
+
+Create $HOME/mytestsuit/test1/test.properties file
+
+{{{
+[defaults]
+descr=Test one file
+copytestres=dir:out
+linux.command=test.sh
+windows.command=test.cmd
+}}}
+
+Explanation:
+
+ * descr : text
+  * Test name displayed while running
+
+ * copytestres : {from}:{to}
+  * Copies test resource (directory) from {from} directory to {to} directory in running test directory.
+  * Example  dir:out
+    * $HOME/mytestsuite/test/dir/file1.txt file
+    * is copied to:
+    * /tmp/rundir/out/file1.txt
+ * linux.command
+  * Defines script (command) to run for linux platform. Script should exit with code 0 if success and non zero if failure. Script is copied to running test directory and launched there.
+ * windows.command
+  * The same for windows system
 
