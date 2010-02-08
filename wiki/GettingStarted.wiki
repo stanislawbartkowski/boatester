@@ -1,10 +1,14 @@
 Getting started with BoaTestRunner - just next test framework.
 
-== Introduction ==
+<wiki:toc max_depth="2" />
+
+= Introduction =
 
 BoaTestRunner is very simple test framework written in Python. It is an extension to standard Python test framework PyUnit.
 
 In this document is described how to download and install BoaTestRunner and how to created and developed test cases.
+
+= General information =
 
 == Prerequisites ==
 
@@ -129,9 +133,27 @@ To add new test case simply create next directory (e.g Test3), lay down proper t
 == How one test case is executed ==
 
  # Clears running test directory.
- # If using of common test resource is declared copies resource to running test directory
+ # If using of common test resource is declared copies that resource to running test directory
  # Copies all test case resource to running test directory
  # Runs test case using proper test case handler.
  # Propagate test result (passed, failed) to BoaTestRunner.
 
-== To be continued ==
+= Creating first test suite =
+
+== Example ==
+
+We want to create two test cases. First uses one test resource : file and test if this file is copied properly, the second is using also one common resource (the second plan). The expected result for first test is to have one file as resource, the expected result for the second test case is to have two files.
+
+== Plan your test suite structure ==
+
+ * Create test launcher (Python module)
+ * Create shell script to start test.
+ * Select running test directory. Keep in mind that this directory is cleaned every time. Assume directory: /tmp/rundir
+ * Select test suite directory. Should contain two subdirectories : test1 and test2. Assume directory {HOME}/mytestsuite
+ * Create test script for every test (here simple shell script testing if file exists).
+ * Select directory for common resource. It could be the same directory as test suite directory {HOME}/mytestsuite/resource/
+
+== Create test launcher (Python module) ==
+
+
+
