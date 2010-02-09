@@ -137,13 +137,26 @@ def __waitforBin(bin):
             break
 
 class ChangeDir :
+    """ Change current directory and keeps previous
+
+    Attributes:
+      param : TestParam container
+      dir : previous directory
+    """
 
     def __init__(self,param) :
+        """ Constructor
+
+        Args:
+          param : TestParam container
+        """
         self.__param = param
         self.__dir = os.getcwd()
         os.chdir(param.getRunDir())
 
     def restore(self) :
+        """ Restores previous directory
+        """
         os.chdir(self.__dir)
         
 
