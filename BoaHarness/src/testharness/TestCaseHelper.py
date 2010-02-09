@@ -136,6 +136,17 @@ def __waitforBin(bin):
         if not found:
             break
 
+class ChangeDir :
+
+    def __init__(self,param) :
+        self.__param = param
+        self.__dir = os.getcwd()
+        os.chdir(param.getRunDir())
+
+    def restore(self) :
+        os.chdir(self.__dir)
+        
+
 def runBin(param, com, binarywaited):
     """Launch command and wait for exit
 
@@ -151,11 +162,13 @@ def runBin(param, com, binarywaited):
   Raises:
     Exception if any error has occured
     """
-    dir = os.getcwd()
-    os.chdir(param.getRunDir())
+#    dir = os.getcwd()
+#    os.chdir(param.getRunDir())
+    d = ChangeDir(param)
     res = os.system(com)
     __waitforBin(binarywaited)
-    os.chdir(dir)
+#    os.chdir(dir)
+    d.restore()
     return res
 
 
