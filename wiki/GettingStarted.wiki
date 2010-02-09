@@ -237,7 +237,7 @@ Explanation:
 
 === Create test script ===
 
-Create $HOME/mytestsuite/test/dir/run.sh script file.
+Create $HOME/mytestsuite/test1/dir/test.sh script file.
 
 {{{
 #!/bin/sh
@@ -254,7 +254,7 @@ Test resource directory should look like:
 
 {{{
 $HOME/mytestsuite/test1
-                     run.sh
+                     test.sh
                      test.properties
                    - dir
                       file.txt
@@ -264,7 +264,7 @@ Before launching test script test running directory looks like:
 
 {{{
 /tmp/rundir
-       run.sh
+       test.sh
        test.properties
      - out
          file1.txt
@@ -280,3 +280,55 @@ TEST PASSED  number of tests : 1
 }}}
 
 Congratulations !
+
+== Creating second test case ==
+
+=== Create test case directory ===
+
+This second test is very like to first but this time we want to use common resource.
+
+So let's create one common resource:
+
+{{{
+  $HOME/mytestsuite/resource/dir/file2.txt
+}}}
+
+=== Create test.properties file ===
+
+Create $HOME/mytestsuit/test2/test.properties file
+
+{{{
+[defaults]
+descr=Test one file
+copytestres=dir:out
+copycommonres=resource/dir1:out
+linux.command=test.sh
+windows.command=test.cmd
+}}}
+
+This file is exactly the same as before, only one line was added :
+
+{{{
+copycommonres=resource/dir1:out
+}}}
+
+This line copies resource/dir1 directory to out directory of test running directory.
+
+=== Create test script ===
+
+Create $HOME/mytestsuite/test2/dir/test.sh script file.
+
+{{{
+#!/bin/sh
+if ! test -d out;  then exit 1; fi
+if test -f out/file1.txt; then exit 0; fi
+if test -f out/file2.txt; then exit 0; fi
+exit 1
+}}}
+  
+=== Run both tests ===
+
+{{{
+=========================
+TEST PASSED  number of tests : 2
+}}}
