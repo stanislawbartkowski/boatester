@@ -332,3 +332,141 @@ exit 1
 =========================
 TEST PASSED  number of tests : 2
 }}}
+
+== Creating third test case ==
+
+=== Information ===
+
+This test is exactly like the first but instead of shell script Python Test Case object is used.
+
+
+=== Create test.properties file ===
+
+Create $HOME/mytestsuit/test3/test.properties file
+
+{{{
+[defaults]
+descr=Test one file
+copytestres=dir:out
+testcase=Test3Case
+}}}
+
+Property file contains:
+
+{{{
+testcase=Test3Case
+}}}
+
+The testcase property indicates that Python module Test3Case.py will be used to run test.
+
+=== Create Python Test Case object ===
+
+Create $HOME/mytestsuit/test3/Test3Case.py file
+
+{{{
+import unittest
+import Test3Case
+import TestCaseHelper
+import os
+
+def injectParam(param,tepar) :
+    Test3Case.param = param
+    Test3Case.tepar = tepar
+
+class TestSuite(unittest.TestCase):
+
+    def setUp(self):
+       TestCaseHelper.prepareRunDir(Test3Case.param, Test3Case.tepar)
+       self.d = TestCaseHelper.ChangeDir(Test3Case.param)
+
+    def testCase1(self):
+        res = os.path.exists("out/file1.txt")
+        self.assertTrue(res)         
+
+    def tearDown(self) :
+        self.d.restore()
+}}}
+
+This Python module is quite different than shell script in the previous examples.
+
+
+{{{
+def injectParam(param,tepar) :
+    Test3Case.param = param
+    Test3Case.tepar = tepar
+}}}
+
+This method is mandatory. BoaTestRunner inject 'TestParam' and 'OneTestParam' container containing common and test case specific parameters.
+
+{{{
+    def setUp(self):
+       TestCaseHelper.prepareRunDir(Test3Case.param, Test3Case.tepar)
+       self.d = TestCaseHelper.ChangeDir(Test3Case.param)
+}}}
+
+Unlike shell script the Python module should on its own to copy resources (prepareRunDir method) and change current directory to test running directory (ChangeDir object)
+
+{{{
+    def testCase1(self):
+        res = os.path.exists("out/file1.txt")
+        self.assertTrue(res)         
+}}}
+
+It is test case in the flesh.
+
+Very important: test result is propagated by TestCase assertion statament.
+
+{{{
+    def tearDown(self) :
+        self.d.restore()
+}}}
+
+Restores current directory.
+
+== Creating fourth test case ==
+
+This test case is almost identical as the third one but uses also common resource.
+
+Create $HOME/mytestsuit/test4/test.properties file
+
+{{{
+[defaults]
+descr=Test one file
+copytestres=dir:out
+copycommonres=resource/dir1:out
+testcase=Test4Case
+}}}
+
+Create $HOME/mytestsuit/test4/Test4Case.py file
+
+{{{
+import unittest
+import Test4Case
+import TestCaseHelper
+import os
+
+def injectParam(param,tepar) :
+    Test4Case.param = param
+    Test4Case.tepar = tepar
+
+class TestSuite(unittest.TestCase):
+
+    def setUp(self):
+       TestCaseHelper.prepareRunDir(Test4Case.param, Test4Case.tepar)
+       self.d = TestCaseHelper.ChangeDir(Test4Case.param)
+
+    def testCase1(self):
+        res1 = os.path.exists("out/file1.txt")
+        res2 = os.path.exists("out/file2.txt")
+        self.assertTrue(res1 and res2)         
+
+    def tearDown(self) :
+        self.d.restore()
+}}}
+
+= Final, rule and bound them all =
+
+{{{
+=========================
+TEST PASSED  number of tests : 4
+}}}
