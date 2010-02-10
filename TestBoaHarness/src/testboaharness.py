@@ -1,5 +1,11 @@
 from TestBoa import *
 from TestCaseHelper import *
+import logging
+
+#LOG_FILENAME = '/tmp/testlogging.out'
+#logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
+
 
 def printhelp():
     print "Usage:"
