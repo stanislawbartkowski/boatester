@@ -96,3 +96,21 @@ Runs command and make sure that command exits with code 0
         self.assertTrue(res)
 }}}
 Compares all files in out in the test case directory with the out directory in test running directory. Test fails if any difference has been found.
+
+== Test script to run ==
+{{{
+#!/bin/sh
+echo "I'm here"
+mkdir out
+echo "Report result" > out/report1.lst
+}}}
+
+== Test case directory structure ==
+
+{{{
+  <test case>
+     test.properties
+     prog.sh
+     <out>
+      report1.lst
+}}}
