@@ -75,7 +75,7 @@ It should extends unittest.TestCase object.
 {{{
     def setUp(self):
         prepareRunDir(self.param, self.teparam)
-}}
+}}}
 
 Copies resources to the test running directory (in this case do nothing but can be added for future extension)
 
