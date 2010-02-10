@@ -175,12 +175,9 @@ def runBin(param, com, binarywaited):
   Raises:
     Exception if any error has occured
     """
-#    dir = os.getcwd()
-#    os.chdir(param.getRunDir())
     d = ChangeDir(param)
     res = os.system(com)
     __waitforBin(binarywaited)
-#    os.chdir(dir)
     d.restore()
     return res
 
@@ -439,7 +436,7 @@ def copyFile(param, teparam, file):
     soufile = os.path.join(soud, file)
     destd = param.getRunDir()
     destfile = os.path.join(destd, file)
-    shutil.copyfile(soufile, destfile)
+    shutil.copy2(soufile, destfile)
 
 
 def clearRunDir(param):
