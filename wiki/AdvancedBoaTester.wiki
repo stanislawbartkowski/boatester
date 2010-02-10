@@ -32,8 +32,8 @@ runcommand property contains command to run.
 
 Custom test case factory should be registered. This factory:
 
- * Should recognize that test case given should be run by custom handler
- * If yes then return TestCase object running this test.
+ # Should recognize that test case given should be run by custom handler
+ # If yes then return TestCase object running this test.
 
 {{{
 class MyFactory:
