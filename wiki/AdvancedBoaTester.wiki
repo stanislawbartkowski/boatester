@@ -18,8 +18,81 @@ For instance:
 
 test.property file should contain some property to make it different then the other test cases. Cannot contain keys: testcase (Python Test Case object) nor command (command test case)
 
-Assume something line:
-
 test.properties
 
 {{{
+[defaults]
+descr=Test custom test case
+runcommand=prog.sh
+}}}
+
+runcommand property contains command to run.
+
+== Prepare custom test case factory ==
+
+Custom test case factory should be registered. This factory:
+
+* Should recognize that test case given should be run by custom handler
+* If yes then return TestCase object running this test.
+
+{{{
+class MyFactory:
+
+    def constructTestCase(self, param, tepar):
+        runcommand = tepar.getPar('runcommand')
+        if runcommand == None : return None
+        teca = ReportTestCase(param, tepar)
+        return [teca]
+}}}
+
+Factory class should have 'constructTestCase' method. It this test case (test.property file is passed as tepar parameter) has runcommand property than factory returns 'ReportTestCase' object.
+Otherwise return None value.
+
+== Prepare custom TestCase object ==
+
+{{{
+class ReportTestCase(unittest.TestCase):
+
+    def __init__(self, param, teparam):
+        unittest.TestCase.__init__(self, 'runTest')
+        self.param = param
+        self.teparam = teparam
+
+    def setUp(self):
+        prepareRunDir(self.param, self.teparam)
+
+    def runTest(self):
+        runcommand = self.teparam.getPar('runcommand')
+        TestCaseHelper.copyFile(self.param, self.teparam, runcommand)
+        res = runBin(self.param, "./" + runcommand, runcommand)
+        self.assertEqual(0,res)
+        res = compareFiles(self.param, self.teparam, "out", ".lst", "out")
+        self.assertTrue(res)
+}}}
+
+It should extends unittest.TestCase object.
+
+{{{
+    def setUp(self):
+        prepareRunDir(self.param, self.teparam)
+}}
+
+Copies resources to the test running directory (in this case do nothing but can be added for future extension)
+
+{{{
+        runcommand = self.teparam.getPar('runcommand')
+        TestCaseHelper.copyFile(self.param, self.teparam, runcommand)
+}}}
+Copies command from test case directory to test running directory.
+
+{{{
+        res = runBin(self.param, "./" + runcommand, runcommand)
+        self.assertEqual(0,res)
+}}}
+Runs command and make sure that command exits with code 0
+
+{{{
+        res = compareFiles(self.param, self.teparam, "out", ".lst", "out")
+        self.assertTrue(res)
+}}}
+Compares all files in out in the test case directory with the out directory in test running directory. Test fails if any difference has been found.
