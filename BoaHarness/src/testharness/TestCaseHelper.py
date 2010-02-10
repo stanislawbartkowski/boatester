@@ -388,6 +388,7 @@ def removeDir(te):
     if not os.path.isdir(te): return
     shutil.rmtree(te)
 
+
 def copyDir(sou, dest):
     """ Copy directory (with subdirectories)
 
@@ -402,15 +403,21 @@ def copyDir(sou, dest):
       Exception if error
     """
     if not os.path.isdir(dest):
+        logging.debug("Copy tree : " + sou + " ==> " + dest)
         shutil.copytree(sou, dest)
         return
     li = os.listdir(sou)
     for na in li:
+        if na == ".svn" :
+          logging.debug(" Ignore " + na)
+          continue
         soul = os.path.join(sou, na)
         destl = os.path.join(dest, na)
         if os.path.isfile(soul):
+            logging.debug("Copy file : " + soul + " ==> " + destl)
             shutil.copyfile(soul, destl)
         else:
+            logging.debug("Copy directory : " + soul + " ==> " + destl)
             copyDir(soul, destl)
 
 def copyFile(param, teparam, file):
