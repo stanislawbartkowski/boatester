@@ -180,10 +180,7 @@ def _resReport(res):
             ca = tes[0]
             descr = tes[1]
             print descr
-            if isinstance(ca, OneTestCase):
-                print "    ", ca.teparam.getDescr()
-            else:
-                print "    ", ca.id()
+            print "    ", ca.id()
 
 def _readListParam(desc):
     """ Read property file
