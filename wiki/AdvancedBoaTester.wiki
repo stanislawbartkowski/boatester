@@ -117,3 +117,33 @@ echo "Report result" > out/report1.lst
      <out>
       report1.lst
 }}}
+
+= API description =
+
+There is some useful API available to custom test case. It is documented in detail via 'doc' objects:
+
+http://code.google.com/p/boatester/source/browse/trunk/BoaHarness/src/testharness/TestBoa.py
+
+http://code.google.com/p/boatester/source/browse/trunk/BoaHarness/src/testharness/TestCaseHelper.py
+
+== TestCaseHelper ==
+ * method: osPrefix : return "Windows" or "linux"
+ * method: isLinux
+ * method: prepareRunCommand : 
+ * object: changeDir : change current directory to running directory
+ * method: runBin : run external program, script
+ * object: TestException
+ * object: OneTestParam : container for test.properties for test case
+ * object: TestParam : container for global properties
+ * method: removeDir 
+ * method: copyDir
+ * method: copyFile
+ * method: clearRunDir
+ * method: preparaRunDir : prepares test running directory
+ * method: compareFiles : compare file contents
+
+== TestBoa ==
+ * object: TestCaseFactory: container for registering custom test case types
+ * object: RunSuiteParam : container with parameters
+ * method: runSuite : entry point
+ 
