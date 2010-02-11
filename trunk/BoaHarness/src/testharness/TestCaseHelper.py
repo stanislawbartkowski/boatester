@@ -118,6 +118,7 @@ def __waitforBin(bin):
   Raises:
     Nothing
     """
+    if not isLinux() : return
     logging.debug("Wait for " + bin)
     while True:
         time.sleep(1)
@@ -400,9 +401,11 @@ def copyDir(sou, dest):
       Exception if error
     """
     if not os.path.isdir(dest):
-        logging.debug("Copy tree : " + sou + " ==> " + dest)
-        shutil.copytree(sou, dest)
-        return
+#        logging.debug("Copy tree : " + sou + " ==> " + dest)
+#        shutil.copytree(sou, dest)
+#        return
+       logging.debug("Create directory : " + dest)
+       os.mkdir(dest)
     li = os.listdir(sou)
     for na in li:
         if na == ".svn" :
