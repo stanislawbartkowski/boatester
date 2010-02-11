@@ -39,7 +39,7 @@ Following directory structure should be created.
 
 }}}
 
-Two packages are extracted. BoaHarness contains BoaTestRunner executable codes. TestBoaHarness contains some tests and samples. To execute tests only BoaHarness package is necessary.
+Two packages are extracted. BoaHarness contains BoaTestRunner executable codes. TestBoaHarness contains some tests and samples. To execute tests only BoaHarness package is sufficient.
 
 To run samples:
 
