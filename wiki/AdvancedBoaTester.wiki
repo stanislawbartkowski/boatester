@@ -140,7 +140,7 @@ http://code.google.com/p/boatester/source/browse/trunk/BoaHarness/src/testharnes
  * method: copyDir
  * method: copyFile
  * method: clearRunDir
- * method: preparaRunDir : prepares test running directory
+ * method: prepareRunDir : prepares test running directory
  * method: compareFiles : compare file contents
 
 == TestBoa ==
