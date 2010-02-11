@@ -127,6 +127,7 @@ http://code.google.com/p/boatester/source/browse/trunk/BoaHarness/src/testharnes
 http://code.google.com/p/boatester/source/browse/trunk/BoaHarness/src/testharness/TestCaseHelper.py
 
 == TestCaseHelper ==
+
  * method: osPrefix : return "Windows" or "linux"
  * method: isLinux
  * method: prepareRunCommand : 
@@ -143,7 +144,10 @@ http://code.google.com/p/boatester/source/browse/trunk/BoaHarness/src/testharnes
  * method: compareFiles : compare file contents
 
 == TestBoa ==
+
  * object: TestCaseFactory: container for registering custom test case types
  * object: RunSuiteParam : container with parameters
  * method: runSuite : entry point
+
+
  
