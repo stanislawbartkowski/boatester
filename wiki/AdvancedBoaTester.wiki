@@ -98,9 +98,11 @@ Runs command and make sure that command exits with code 0
         res = compareFiles(self.param, self.teparam, "out", ".lst", "out")
         self.assertTrue(res)
 }}}
+
 Compares all files in out in the test case directory with the out directory in test running directory. Test fails if any difference has been found.
 
 == Test script to run ==
+
 {{{
 #!/bin/sh
 echo "I'm here"
@@ -118,9 +120,13 @@ echo "Report result" > out/report1.lst
       report1.lst
 }}}
 
+
+
 = API description =
 
+
 There is some useful API available to custom test case. It is documented in detail via 'doc' objects:
+
 
 http://code.google.com/p/boatester/source/browse/trunk/BoaHarness/src/testharness/TestBoa.py
 
@@ -128,28 +134,29 @@ http://code.google.com/p/boatester/source/browse/trunk/BoaHarness/src/testharnes
 
 == TestCaseHelper ==
 
- || *What* || *Name* || *Description* ||
- || method || osPrefix || return "Windows" or "linux"||
- || method || isLinux || ||
- || method || prepareRunCommand  ||  || 
- || object || changeDir  || change current directory to running directory || 
- || method || runBin || run external program, script || 
- || object || TestException ||  || 
- || object || OneTestParam || container for test.properties for test case  || 
- || object || TestParam  || container for global properties || 
- || method || removeDir  ||  ||  
- || method || copyDir ||  || 
- || method || copyFile ||  || 
- || method || clearRunDir ||  || 
- || method || prepareRunDir ||  prepares test running directory || 
- || method || compareFiles || compare file contents || 
+
+|| *What* || *Name* || *Description* ||
+|| method || osPrefix || return "Windows" or "linux"||
+|| method || isLinux || ||
+|| method || prepareRunCommand  ||  || 
+|| object || changeDir  || change current directory to running directory || 
+|| method || runBin || run external program, script || 
+|| object || TestException ||  || 
+|| object || OneTestParam || container for test.properties for test case  || 
+|| object || TestParam  || container for global properties || 
+|| method || removeDir  ||  ||  
+|| method || copyDir ||  || 
+|| method || copyFile ||  || 
+|| method || clearRunDir ||  || 
+|| method || prepareRunDir ||  prepares test running directory || 
+|| method || compareFiles || compare file contents || 
 
 == TestBoa ==
 
- || *What* || *Name* || *Description* ||
- || object ||  TestCaseFactory ||  container for registering custom test case types  || 
- || object ||  RunSuiteParam  ||  container with parameters || 
- || method ||  runSuite  ||  entry point || 
+|| *What* || *Name* || *Description* ||
+|| object ||  TestCaseFactory ||  container for registering custom test case types  || 
+|| object ||  RunSuiteParam  ||  container with parameters || 
+|| method ||  runSuite  ||  entry point || 
 
 
  
