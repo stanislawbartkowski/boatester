@@ -1,4 +1,3 @@
-#!/usr/bin/python2.5
 #
 # Copyright [2010] the stanislaw.bartkowski@gmail.com
 #
@@ -211,6 +210,9 @@ class TestException(Exception):
 
         """
         print self.s
+
+    def __str__(str) :
+        return self.s
 
 
 class OneTestParam:
