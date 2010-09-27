@@ -1,4 +1,3 @@
-#!/usr/bin/python2.5
 #
 # Copyright [2010] the stanislaw.bartkowski@gmail.com
 #
@@ -32,7 +31,7 @@ import TestCaseHelper
 
 _TEST = "test"
 
-def _exist(fname):
+def exist(fname):
     """ Check if directory exists (as expected)
     
     Args:
@@ -197,7 +196,7 @@ def _readListParam(desc):
     """
     cf = ConfigParser.ConfigParser()
     logging.debug("Read property file " + desc)
-    _exist(desc)
+    exist(desc)
     cf.read(desc)
     list = cf.items("defaults")
     h = {}
