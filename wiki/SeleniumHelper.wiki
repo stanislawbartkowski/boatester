@@ -4,9 +4,40 @@ Add-on to BoaTester supporting selenium based test of web applications.
 
 = Introduction =
 
-Selenium: http://seleniumhq.org/ is grown-up and well known framework for testing web applications. During my work with that framework I came to the conclusion that test steps written as sequence of python statement is not good idea and decided to run a simple extension to selenium which replaces this part of test with simple text file.
+Selenium: http://seleniumhq.org/ is grown-up and well known framework for testing web applications. During my work with that framework I came to the conclusion that test steps written as sequence of python statement is not a good idea and decided to create a simple extension to the selenium which replaces this part of test with simple text file.
 
-= 
+= General idea ==
+
+The purpose is to replace sequence of python statements like:
+{{{
+        self.assertTrue(sel.is_element_present("id=ACCEPT"),"Element not found")
+        self.assertTrue(sel.is_element_present("xpath=//option[@value='hotel']"),"Element not found")
+        sel.click("id=ACCEPT")
+        sel.type("PASSWORD", "osoba")
+        sel.type("LOGINNAME, "osoba")
+        sel.click("id=ACCEPT")
+        self.assertTrue(sel.is_element_present("xpath=//td[@class='user']//div[text()='osoba']"),"Element not found"
+ }}}
+
+with something like (lines from text file):
+{{{
+waitFor : #ACCEPT
+waitFor : xpath=//option[@value='hotel']|20
+-- Test Case 1
+-- Click on 'Accept' and error 'Login name is empty' is expected
+click : #ACCEPT
+mouseOver : #PASSWORD
+-- Test Case 2
+-- enter osoba and osoba as login name and password and click 'Accept'
+-- login should be done and 'osoba' login name should appeat at the top panel
+type : #LOGINNAME|osoba
+type : #PASSWORD|osoba
+click : #ACCEPT
+waitFor : xpath=//td[@class='user']//div[text()='osoba']
+}}}
+
+Some
+
 
 = Details =
 
