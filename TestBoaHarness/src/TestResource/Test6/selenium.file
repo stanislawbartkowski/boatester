@@ -1,0 +1,19 @@
+[alias]
+ACCEPT : id=ACCEPT
+PASSWORD : PASSWORD
+LOGINNAME : LOGINNAME
+
+[test]
+waitFor : #ACCEPT
+waitFor : xpath=//option[@value='hotel']|20
+-- Test Case 1
+-- Click on 'Accept' and error 'Login name is empty' is expected
+click : #ACCEPT
+mouseOver : #PASSWORD
+-- Test Case 2
+-- enter osoba and osoba as login name and password and click 'Accept'
+-- login should be done and 'osoba' login name should appeat at the top panel
+type : #LOGINNAME|osoba
+type : #PASSWORD|osoba
+click : #ACCEPT
+waitFor : xpath=//td[@class='user']//div[text()='osoba']
