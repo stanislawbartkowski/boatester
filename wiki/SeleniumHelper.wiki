@@ -1,9 +1,12 @@
-# Add-on to BoaTester supporting selenium based test of web applications.
+Add-on to BoaTester supporting selenium based test of web applications.
+
+<wiki:toc max_depth="2" />
 
 = Introduction =
 
-Add your content here.
+Selenium: http://seleniumhq.org/ is grown-up and well known framework for testing web applications. During my work with that framework I came to the conclusion that test steps written as sequence of python statement is not good idea and decided to run a simple extension to selenium which replaces this part of test with simple text file.
 
+= 
 
 = Details =
 
