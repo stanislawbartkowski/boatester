@@ -209,12 +209,19 @@ class seleniumTypeContext :
             logging.debug(self.key + " " + str(cparam))
         else :
             logging.debug(self.key)
-
+        self.cparam = cparam
         if cparam == None or len(cparam) < self.nof :
-            raise TestCaseHelper.TestException(self.key + " requires " + str(self.nof) + " parameters! Actual number : " +  str(cparam))
+            # check default vales
+            dlen = 0
+            if self.defa != None : dlen = len(self.defa)
+            if len(cparam) + dlen < self.nof :        
+              raise TestCaseHelper.TestException(self.key + " requires " + str(self.nof) + " parameters! Actual number : " +  str(cparam))
+            # default values  
+            for pa in self.defa :
+              self.cparam.append(pa)  
+              
            
         self.se = se
-        self.cparam = cparam
         self.tcase = tcase
         self.param = param
         self.teparam = teparam
@@ -227,15 +234,17 @@ class seleniumTypeContext :
         """
         return (self.ce, self.cparam, self.tcase, self.param, self.teparam)
 
-    def setInfo(self,key,nof) :
+    def setInfo(self,key,nof, defa=None) :
         """ Set additonal information for action handler
         
         Args:
           key : action name
           nof : number of parameters
+          defa : list of default parameters (if actual less than nof)
         """
         self.key = key
         self.nof = nof
+        self.defa = defa
 
 def waitForElement(tcase,sel,ele,sec=5) :
     """ Waits for element on the screen
@@ -250,7 +259,7 @@ def waitForElement(tcase,sel,ele,sec=5) :
        fails test case if time expires
        
     """
-    for i in range(1,5) :
+    for i in range(1,sec) :
         if sel.is_element_present(ele) : return
         time.sleep(1)
     tcase.fail(ele + " cannot find that element !")
@@ -296,7 +305,18 @@ class seleniumWaitFor(seleniumTypeContext) :
     """
 
     def do(self):
-        waitForElement(self.tcase,self.se,self.cparam[0])
+        sec = int(self.cparam[1])
+        waitForElement(self.tcase,self.se,self.cparam[0], sec)
+        
+class seleniumMouseOver(seleniumTypeContext) :
+    """ Action class for 'mouseOver' action
+    First parameter: element selector for which 'mouseOver' action is performed
+    """
+
+    def do(self):
+        self.se.mouse_over(self.cparam[0]);        
+        
+# sel.mouse_over(self.PASSWORD)
 
 class seleniumIsPresent(seleniumTypeContext) :
     """ Action class for 'isPresent' action
@@ -335,12 +355,13 @@ class SeleniumHelper :
         self.registerAction('type',seleniumType(),2)
         self.registerAction('click',seleniumClick())
         self.registerAction('sleep',seleniumWait())
-        self.registerAction('waitFor',seleniumWaitFor())
+        self.registerAction('waitFor',seleniumWaitFor(),2,  [5])
         self.registerAction('debug',seleniumDebug(),0)
         self.registerAction('verEqual',seleniumVerEqual(),2)
-        self.registerAction('isPresent',seleniumIsPresent(),1)
+        self.registerAction('isPresent',seleniumIsPresent())
+        self.registerAction('mouseOver',seleniumMouseOver())
 
-    def registerAction(self,key,o,nofParam = 1):
+    def registerAction(self,key,o,nofParam = 1, defa=None):
         """ Register custom action handler
         
         Args:
@@ -349,7 +370,7 @@ class SeleniumHelper :
           nofParam : number of parameters expected
         """
         logging.debug('Register action ' + key + ' num of params:' + str(nofParam))
-        o.setInfo(key,nofParam)
+        o.setInfo(key,nofParam, defa)
         self.a[key] = o
         
 
