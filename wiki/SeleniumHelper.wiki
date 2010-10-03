@@ -1,6 +1,6 @@
 Add-on to BoaTester supporting selenium based test of web applications.
 
-<wiki:toc max_depth="2" />
+<wiki:toc max_depth="3" />
 
 = Introduction =
 
@@ -47,7 +47,7 @@ and python statement:
 
 == Aliases ==
 
-Some elements (for instance button) are used more than one time. So aliases are necessary in order to avoid typing exact element selector (for instance "id=ACCEPT") and use alias name (#ACCEPT) instead. No problem with simple selector identifier but in case of complicated identifier ("xpath=//div[2][text='aaa']//td ...") it could save time and lower the risk of inproper typing. Also in case of changing the element identifiers - very likely after changing the screen layout - it is enough to change only the alias definition thus leaving the test steps related to this element unchanged.
+Some elements (for instance button) are used more than once. So aliases are necessary in order to avoid typing exact element selector (for instance "id=ACCEPT") and use alias name (#ACCEPT) instead. No problem with simple selector identifier but in case of complicated identifier ("xpath=//div[2][text='aaa']//td ...") it could save time and lower the risk of inproper typing. Also in case of changing the element identifiers - very likely after changing the screen layout - it is enough to change only the alias definition thus leaving the test steps related to this element unchanged.
 
 == Common elements ==
 
@@ -65,13 +65,91 @@ Login to the application
 Run test scenario 2
 }}}
 
-In order to avoid duplicating the same login sequence it is necessary to create a simple 'common' 
+In order to avoid duplicating the same login sequence it is necessary to create a simple 'common' resource containing reusable elements.
 
+== Keep it simple ==
 
+The purpose is to simplify only one aspect of running selenium test in python. The purpose is not to cover all selenium or to create another test framework. So there is no automation for starting selenium server, opening and starting selenium main object. The test case can be also partially automated by this extension, it is possible to run one fragment of test steps by this automation and the rest by the regular python module.
 
 = Details =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+== SeleniumHelper file ==
+
+=== General information ===
+
+The resource used by SeleniumHelper is simple text file divided into different section identified by [section name] tag.
+
+=== The file structure ===
+
+The general structure is as follows:
+
+{{{
+[alias]
+.. alial section ..
+[test name 1]
+.. test step for 'test name1' 
+[test name 2]
+.. test steps for 'test name 2'
+[.....]
+etc
+}}}
+
+Blank lines are ignored. Comment is a line starting with --. For example:
+
+{{{
+[test1]
+-- Test Case scenario:
+-- Test steps:
+-- Login as U/P person/tosecret
+-- Verification:
+-- Login passed
+type : #LOGINNAME|person
+..
+}}}
+
+===Alias section===
+
+Everything between [alias] and the next section or the end of file. Only one alias section is allowed or there could be no any alias section at all.
+
+[alias]
+
+alias id1 : alias definition 1
+alias id2 : alias definition 2
+....
+end of file or the next section
+
+Definition of one alias
+
+alias1 : definition of alias
+
+Example:
+{{{
+[alias]
+ACCEPT : id=ACCEPT
+PASSWORD : PASSWORD
+LOGINNAME : LOGINNAME
+
+[test]
+...
+}}}
+
+Here we have three aliases: ACCEPT with definition 'id=ACCEPT', PASSWORD with defintion 'PASSWORD' and LOGINNAME as 'LOGINNAME'.
+
+Trailing spaces for identifier and definition are removed. So
+{{{
+ACCEPT : id=ACCEPT
+ ACCEPT   :id=ACCEPT
+
+ACCEPT   :    id=ACCEPT
+}}}
+describe the same alias.
+
+=== Test steps section ===
+
+
+Everything from [test name] to the next section or to the end of file. Test name cannot be 'alias'. Test steps contain series of lines describing one test step. Steps are executed in top-bottom order. In case of an error or verification failure exception is raised. Verification failure raises 'unittest' failure : (http://docs.python.org/library/unittest.html)
+
+[test name 1]
+actionid : parameter1|parameter2| ... | parametern
+.....
+next section or the end of file
