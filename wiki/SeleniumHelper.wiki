@@ -180,17 +180,16 @@ Important: spaces are significant. In this example it space at the beginning of 
 Important: By 'element selector' I mean the way of locating elements in the html page using method described in Selenium doc:
 http://seleniumhq.org/docs/04_selenese_commands.html#locating-elements
 
-||Name||Description||Parameter 1||Parameter2||
-||type||Types a text into html element||Element selector||Text||
+||*Name*||*Description*||*Parameter 1*||*Parameter 2*||
+||type||Types a text into html element||Element selector||Text to be typed in (warning: trailing spaces are significant||
+||click||Click an element||Element selector||
 ||sleep||Wait for a number of seconds||Number of seconds||
 ||waitFor||Waits for an element on the screen. Failure if element not found and time - number of seconds expires||Number of seconds (default: 5 second)||
+||debug||Does nothing, placeholder for debug breakpoint||
+||verEqual||Verification, compares contents of element with text given, failures test if not equal||Element selector||Text to be compared with (warning: trailing spaces are significant||
+||isPresent||Verifies if element is on the screen, failures test otherwise||Element selector||
+||mouseOver||Positions mouse on the element||Element selector||
 
+=How to use=
 
-self.registerAction('type',seleniumType(),2)
-        self.registerAction('click',seleniumClick())
-        self.registerAction('sleep',seleniumWait())
-        self.registerAction('waitFor',seleniumWaitFor(),2,  [5])
-        self.registerAction('debug',seleniumDebug(),0)
-        self.registerAction('verEqual',seleniumVerEqual(),2)
-        self.registerAction('isPresent',seleniumIsPresent())
-        self.registerAction('mouseOver',seleniumMouseOver())
+==Test case directory structure==
