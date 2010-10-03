@@ -73,15 +73,13 @@ The purpose is to simplify only one aspect of running selenium test in python. T
 
 Only a subset of selenium command is covered. But it is very simple to extend this subset by adding more commands.
 
-= Details =
+= Details, SeleniumHelper file =
 
-== SeleniumHelper file ==
-
-=== General information ===
+== General information ==
 
 The resource used by SeleniumHelper is simple text file divided into different section identified by [section name] tag.
 
-=== The file structure ===
+== The file structure ==
 
 The general structure is as follows:
 
@@ -109,7 +107,7 @@ type : #LOGINNAME|person
 ..
 }}}
 
-===Alias section===
+==Alias section==
 
 Everything between [alias] and the next section or the end of file. Only one alias section is allowed or there could be no any alias section at all.
 
@@ -146,7 +144,7 @@ ACCEPT   :    id=ACCEPT
 }}}
 describe the same alias.
 
-=== Test steps section ===
+== Test steps section ==
 
 ==== General =====
 
