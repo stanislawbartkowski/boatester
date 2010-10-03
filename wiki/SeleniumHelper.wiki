@@ -175,4 +175,22 @@ Test step name is *waitFor* and it is used with two parameters *  xpath=//option
 
 Important: spaces are significant. In this example it space at the beginning of the first parameter does not make any difference but in case of typing form values it could make difference.
 
-==== List of action defined ====
+==== List of actions ====
+
+Important: By 'element selector' I mean the way of locating elements in the html page using method described in Selenium doc:
+http://seleniumhq.org/docs/04_selenese_commands.html#locating-elements
+
+||Name||Description||Parameter 1||Parameter2||
+||type||Types a text into html element||Element selector||Text||
+||sleep||Wait for a number of seconds||Number of seconds||
+||waitFor||Waits for an element on the screen. Failure if element not found and time - number of seconds expires||Number of seconds (default: 5 second)||
+
+
+self.registerAction('type',seleniumType(),2)
+        self.registerAction('click',seleniumClick())
+        self.registerAction('sleep',seleniumWait())
+        self.registerAction('waitFor',seleniumWaitFor(),2,  [5])
+        self.registerAction('debug',seleniumDebug(),0)
+        self.registerAction('verEqual',seleniumVerEqual(),2)
+        self.registerAction('isPresent',seleniumIsPresent())
+        self.registerAction('mouseOver',seleniumMouseOver())
