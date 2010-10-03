@@ -8,6 +8,8 @@ Selenium: http://seleniumhq.org/ is grown-up and well known framework for testin
 
 = General idea ==
 
+== Test steps ==
+
 The purpose is to replace sequence of python statements like:
 {{{
         self.assertTrue(sel.is_element_present("id=ACCEPT"),"Element not found")
@@ -21,6 +23,7 @@ The purpose is to replace sequence of python statements like:
 
 with something like (lines from text file):
 {{{
+[testcase1]
 waitFor : #ACCEPT
 waitFor : xpath=//option[@value='hotel']|20
 -- Test Case 1
@@ -36,7 +39,34 @@ click : #ACCEPT
 waitFor : xpath=//td[@class='user']//div[text()='osoba']
 }}}
 
-Some
+and python statement:
+
+{{{
+   runtest['testcase']
+}}}
+
+== Aliases ==
+
+Some elements (for instance button) are used more than one time. So aliases are necessary in order to avoid typing exact element selector (for instance "id=ACCEPT") and use alias name (#ACCEPT) instead. No problem with simple selector identifier but in case of complicated identifier ("xpath=//div[2][text='aaa']//td ...") it could save time and lower the risk of inproper typing. Also in case of changing the element identifiers - very likely after changing the screen layout - it is enough to change only the alias definition thus leaving the test steps related to this element unchanged.
+
+== Common elements ==
+
+Very often test cases are sharing some common test elements and definitions. For instance:
+
+Test Case 1:
+{{{
+Login to the application
+Run test scenario 1
+}}}
+
+Test Case 2:
+{{{
+Login to the application
+Run test scenario 2
+}}}
+
+In order to avoid duplicating the same login sequence it is necessary to create a simple 'common' 
+
 
 
 = Details =
