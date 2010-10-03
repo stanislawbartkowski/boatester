@@ -1,6 +1,6 @@
 Add-on to BoaTester supporting selenium based test of web applications.
 
-<wiki:toc max_depth="3" />
+<wiki:toc max_depth="4" />
 
 = Introduction =
 
@@ -70,6 +70,8 @@ In order to avoid duplicating the same login sequence it is necessary to create 
 == Keep it simple ==
 
 The purpose is to simplify only one aspect of running selenium test in python. The purpose is not to cover all selenium or to create another test framework. So there is no automation for starting selenium server, opening and starting selenium main object. The test case can be also partially automated by this extension, it is possible to run one fragment of test steps by this automation and the rest by the regular python module.
+
+Only a subset of selenium command is covered. But it is very simple to extend this subset by adding more commands.
 
 = Details =
 
@@ -146,10 +148,31 @@ describe the same alias.
 
 === Test steps section ===
 
+==== General =====
 
 Everything from [test name] to the next section or to the end of file. Test name cannot be 'alias'. Test steps contain series of lines describing one test step. Steps are executed in top-bottom order. In case of an error or verification failure exception is raised. Verification failure raises 'unittest' failure : (http://docs.python.org/library/unittest.html)
 
+{{{
 [test name 1]
 actionid : parameter1|parameter2| ... | parametern
 .....
 next section or the end of file
+}}}
+
+==== Test step line ====
+
+actionid : parameter1|parameter2| ... | parametern
+
+Test step name and zero, one or more parameters separated by | character.
+
+For instance:
+
+{{{
+waitFor : xpath=//option[@value='hotel']|20
+}}}
+
+Test step name is *waitFor* and it is used with two parameters *  xpath=//option[@value='hotel']" and *20*
+
+Important: spaces are significant. In this example it space at the beginning of the first parameter does not make any difference but in case of typing form values it could make difference.
+
+==== List of action defined ====
