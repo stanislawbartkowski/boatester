@@ -348,3 +348,7 @@ Run 'registerAction' method of 'SeleniumHelper.SeleniumHelper' class
  * *action* : reference to action object
  * *nof* : maximum number of parameter (default 1)
  * *defa* : list of default values used if number of actual parameter is less than maximum number (default none)
+
+{{{
+  he.registerAction('type',seleniumType(),2)
+}}}
