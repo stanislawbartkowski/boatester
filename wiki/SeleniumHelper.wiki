@@ -4,7 +4,7 @@ Add-on to BoaTester supporting selenium based test of web applications.
 
 = Introduction =
 
-Selenium: http://seleniumhq.org/ is grown-up and well known framework for testing web applications. During my work with that framework I came to the conclusion that test steps written as sequence of python statement is not a good idea and decided to create a simple extension to the selenium which replaces this part of test with simple text file.
+Selenium: [http://seleniumhq.org/] is grown-up and well known framework for testing web applications. During my work with that framework I came to the conclusion that test steps written as sequence of python statement is not a good idea and decided to create a simple extension to the selenium which replaces this part of test with simple text file.
 
 = General idea ==
 
@@ -191,3 +191,157 @@ http://seleniumhq.org/docs/04_selenese_commands.html#locating-elements
 =How to use=
 
 ==Test case directory structure==
+
+http://code.google.com/p/boatester/wiki/GettingStarted#How_tests_are_organized
+
+{{{
+TestResource
+  test.properties
+  selenium.file
+  { common SeleniumHelper file }
+  Test1
+    test.properties
+    selenium.file
+    { local SeleniumHelper file}
+}}}
+
+test.properties file (global and local) should contain selFile property. The value is the name of SeleniumHelper file (global or local}
+
+{{{
+...
+selFile=selenium.file
+...
+}}}
+
+It is not necessary to have both local and global SeleniumHelper file defined. 
+
+==How to run selenium based test==
+
+===Initialization===
+
+http://seleniumhq.org/docs/05_selenium_rc.html#chapter05-reference
+
+Selenium server should be started manually outside BoaTester.
+
+===Declaration===
+
+[http://code.google.com/p/boatester/source/browse/trunk/TestBoaHarness/src/TestResource/Test6/]
+
+It is a definition of python test case.
+
+test.properties
+{{{
+[defaults]
+descr=Test custom test case
+testcase=Test6Case
+selFile=selenium.file
+}}}
+
+===Test case code===
+
+Test6Case
+{{{
+import unittest
+import Test6Case
+import TestCaseHelper
+import os
+from selenium import selenium
+import SeleniumHelper
+
+
+def injectParam(param,tepar) :
+    Test6Case.param = param
+    Test6Case.tepar = tepar
+
+class TestSuite(unittest.TestCase):
+
+    def setUp(self):
+       self.selenium = selenium("localhost", 4444, "*firefox", "http://hotelnajavie.appspot.com/")
+       self.selenium.start()
+       self.seHelper = SeleniumHelper.SeleniumHelper(self.selenium)
+       self.seHelper.setParam(self,Test6Case.param,Test6Case.tepar)
+
+    def testCase1(self):
+       self.selenium.open("")
+       self.seHelper.runTest('test')
+
+
+    def tearDown(self) :
+        pass
+}}}
+
+It is a standard testunit test case. This test is run open source project.
+
+[http://hotelnajavie.appspot.com/]
+
+*setUp* method. Initialize and start selenium object following the selenium doc. Then intialize and pass parameters to SeleniumHelper objet.
+
+*testCase* method. Open selenium and run test by launching one command. That is all !
+
+===Test example===
+
+Pay attention that test name [test] is the same as parameter to 'runTest' command.
+
+[http://code.google.com/p/boatester/source/browse/trunk/TestBoaHarness/src/TestResource/Test6/selenium.file]
+
+===Additional info===
+As we can see the SeleniumHelper only automates the part of selenium testing, it not replaces the framework. It is not a problem to run a part of the test case using that automation than continue using standard python code. We can use this automation more than one in the test. 
+So it is quite reasonable to call it a "Helper" - it really helps with the test preparation.
+
+=API description=
+
+
+[http://code.google.com/p/boatester/source/browse/trunk/BoaHarness/src/testharness/SeleniumHelper.py SeleniumHelper]
+
+*class SeleniumHelper.SeleniumHelper*
+
+  *Constructor*
+    Reference to selenium object
+
+  *setParam*
+    Should be called once before running any test.
+    Three parameters: Reference to unitest object, TestParam and OneTestParam object
+
+  *runTest*
+    Run the test.
+    One parameter: test name. Test can be defined in the global or local SeleniumHelper file.
+    In any error has occurred or verification failed the exception is raised.
+
+=How to extend set of actions or write custom actions=
+
+==Extend SeleniumHelper.seleniumTypeContext==
+
+Write own class being the extension of SeleniumHelper.seleniumTypeContext object.
+
+==Overload 'do' method==
+
+The 'do' method can make usage of the following attributes.
+
+||Attribute||Description||
+||self. cparam||List of actual parameters. All parameter are string||
+||self.se||selenium object||
+||self.tcase||unittest.TestCase class containing this test||
+||self.param||TestParam container||
+||tepar||OneTestParam container||
+
+Example:
+{{{
+class seleniumType(seleniumTypeContext) :
+    """ Action class for 'type' action 
+    First parameter - element selector
+    Second parameter - string to be typed in
+    """
+    def do(self):
+        self.se.type(self.cparam[0], self.cparam[1])
+}}}
+
+==Register your action==
+
+Run 'registerAction' method of 'SeleniumHelper.SeleniumHelper' class
+
+*registerAction* method.
+
+ * *key* : action name
+ * *action* : reference to action object
+ * *nof* : maximum number of parameter (default 1)
+ * *defa* : list of default values used if number of actual parameter is less than maximum number (default none)
