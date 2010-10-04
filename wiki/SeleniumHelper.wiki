@@ -111,16 +111,19 @@ type : #LOGINNAME|person
 
 Everything between [alias] and the next section or the end of file. Only one alias section is allowed or there could be no any alias section at all.
 
+{{{
 [alias]
-
 alias id1 : alias definition 1
 alias id2 : alias definition 2
 ....
 end of file or the next section
+}}}
 
 Definition of one alias
 
+{{{
 alias1 : definition of alias
+}}}
 
 Example:
 {{{
