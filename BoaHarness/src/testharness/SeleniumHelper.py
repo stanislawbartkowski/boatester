@@ -308,6 +308,16 @@ class seleniumWaitFor(seleniumTypeContext) :
         sec = int(self.cparam[1])
         waitForElement(self.tcase,self.se,self.cparam[0], sec)
         
+class selectCombo(seleniumTypeContext) :
+    """ Action class for 'waitFor' action
+    First parameter: element selector to be waited
+    """
+
+    def do(self):
+        locator = self.cparam[0]
+        label = self.cparam[1]
+        self.se.select(locator, 'value=' + label)
+        
 class seleniumMouseOver(seleniumTypeContext) :
     """ Action class for 'mouseOver' action
     First parameter: element selector for which 'mouseOver' action is performed
@@ -360,6 +370,8 @@ class SeleniumHelper :
         self.registerAction('verEqual',seleniumVerEqual(),2)
         self.registerAction('isPresent',seleniumIsPresent())
         self.registerAction('mouseOver',seleniumMouseOver())
+        self.registerAction('selectCombo',selectCombo(), 2)
+        
 
     def registerAction(self,key,o,nofParam = 1, defa=None):
         """ Register custom action handler

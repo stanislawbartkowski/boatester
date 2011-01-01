@@ -97,6 +97,12 @@ def _readTests(param, testrun, testid):
         if lower.find(_TEST) != 0:
             logging.debug("Does not contain, omit")
             continue;
+            
+        disabled = os.path.join(di, "disabled")    
+        logging.debug("Check for disabled:" + disabled)
+        if os.path.exists(disabled):
+            logging.debug("Test disabled : ignore this test") 
+            continue
         numb = lower[len(_TEST): 100]
         testno = int(numb)
         logging.debug("Testno=" + str(testno))
@@ -112,7 +118,7 @@ def _readTests(param, testrun, testid):
                 dodaj = 1
 
         if dodaj:
-            logging.debug("Add test diectory " + d + " with number " + str(testno))
+            logging.debug("Add test directory " + d + " with number " + str(testno))
             list.append((d, testno))
 
 
