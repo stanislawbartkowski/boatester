@@ -309,10 +309,10 @@ class seleniumWaitFor(seleniumTypeContext) :
         waitForElement(self.tcase,self.se,self.cparam[0], sec)
         
 class selectCombo(seleniumTypeContext) :
-    """ Action class for 'waitFor' action
-    First parameter: element selector to be waited
+    """ Action class for 'selectCombo' action
+    First parameter: element selector for 'select' tag
+    Second parameter: Value to be selected
     """
-
     def do(self):
         locator = self.cparam[0]
         label = self.cparam[1]
