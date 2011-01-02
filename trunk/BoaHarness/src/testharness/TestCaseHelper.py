@@ -20,6 +20,7 @@ __authors__ = [
     '"Stansislaw Bartkowski" <stanislawbartkowski@gmail.com>',
 ]
 
+import logging
 import filecmp
 import logging
 import os
@@ -198,6 +199,7 @@ class TestException(Exception):
           s : error message
         """
         self.s = s
+        logging.critical(s)
 
     def draw(self):
         """Prints error message

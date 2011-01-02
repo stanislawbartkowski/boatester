@@ -140,11 +140,12 @@ class ConfigFileHelper :
            TestException if alias does not exist
 
         """
+        o = key.strip()
         if self.testco != None :
-           al = self.testco.getOption(key)
+           al = self.testco.getOption(o)
            if al != None : return al
         if self.mainco != None :
-           al = self.mainco.getOption(key)
+           al = self.mainco.getOption(o)
            if al != None : return al
         raise TestCaseHelper.TestException(key + " no alias with that name")
 
