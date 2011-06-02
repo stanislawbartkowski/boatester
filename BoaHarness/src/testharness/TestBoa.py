@@ -147,7 +147,7 @@ def _getTestCase(factory, param, testId):
     if not os.path.isfile(desc):
         logging.debug("Does not exist, omit")
         return None
-    cfte = _readListParam(desc)
+    cfte = _readListParam(desc, param.suiteparam)
     par = TestCaseHelper.OneTestParam(testId, cfte)
     for fa in factory.getListFactory():
         testcase = fa.constructTestCase(param, par)
@@ -187,11 +187,12 @@ def _resReport(res):
             print descr
             print "    ", ca.id()
 
-def _readListParam(desc):
+def _readListParam(desc, suiteParam ):
     """ Read property file
 
     Args:
       desc : property file (path name)
+      suiteParam : SuiteParam
 
     Returns:
       Dictionary key:value
@@ -200,7 +201,7 @@ def _readListParam(desc):
       Exception if error
       TestException if property file does not exist
     """
-    cf = ConfigParser.ConfigParser()
+    cf = ConfigParser.ConfigParser(suiteParam.createDict())
     logging.debug("Read property file " + desc)
     exist(desc)
     cf.read(desc)
@@ -235,10 +236,15 @@ class PythonUnitTestFactory:
           Exception if error
         """
         if par.isTestCase():
-            li = param.getTestDir(par.getTestId())
+            val = par.getPar('dirtestcase')
+            if val == None :
+               li = param.getTestDir(par.getTestId())
+            else :
+               li = val   
             prev = sys.path
             sys.path.append(li)
             lo = unittest.TestLoader()
+            logging.debug('Read test case ' + par.getTestCase() + " from directory " + li)
             mod = __import__(par.getTestCase())
             mod.injectParam(param, par)
             ca = lo.loadTestsFromModule(mod)
@@ -391,6 +397,13 @@ class RunSuiteParam:
         self.globresdir = globresdir
         self.resdir = resdir
         self.rundir = rundir
+        
+    def createDict(self) :
+         dict = {}
+         dict['globresdir'] = self.globresdir
+         dict['resdir'] = self.resdir
+         dict['rundir'] = self.rundir
+         return dict
 
 
 def runSuite(suiteparam, testrun, testid):
@@ -410,7 +423,7 @@ def runSuite(suiteparam, testrun, testid):
     try:
         he = None
         if suiteparam.testprop != None:
-            he = _readListParam(suiteparam.testprop)
+            he = _readListParam(suiteparam.testprop,  suiteparam)
         param = TestCaseHelper.TestParam(he, suiteparam)
 
         list = _readTests(param, testrun, testid)
