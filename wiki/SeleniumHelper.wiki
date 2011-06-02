@@ -240,6 +240,18 @@ testcase=Test6Case
 selFile=selenium.file
 }}}
 
+It is also possible to read python test case file from another location. Directory is define by parameter dirtestcase. If this parameter is provided then 'testcase' is read from directory 'dirtestcase' - not from test case resource directory. It makes sense if several test case are using the same python test case file and differs only by scenario defined in 'selenium.file'.
+Example:
+test.properties
+{{{
+[defaults]
+descr=Test custom test case
+testcase=CommonTestCase
+dirtestcase=dirtestcase=%(globresdir)s
+selFile=selenium.file
+}}}
+This python test case CommonTestCase is read from 'dirtestcase' directory - although the selenium file is read from test case resource directory
+
 ===Test case code===
 
 Test6Case
