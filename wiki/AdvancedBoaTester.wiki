@@ -31,6 +31,14 @@ runcommand=prog.sh
 
 runcommand property contains command to run.
 
+Test case property could contain reference to some environment variable:
+Details on property file: [http://www.python.org/doc//current/library/configparser.html]
+Only three variables are supported:
+||Name || Meaning ||
+||globresdir||Directory for global resources||
+||resdir||Directory for current test case resources||
+||rundir||Working directory for test execution||
+
 == Prepare custom test case factory ==
 
 Custom test case factory should be registered. This factory:
