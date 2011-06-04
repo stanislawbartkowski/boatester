@@ -274,6 +274,24 @@ class seleniumType(seleniumTypeContext) :
     def do(self):
         self.se.type(self.cparam[0], self.cparam[1])
         
+class seleniumKeyDown(seleniumTypeContext) :
+    """ Action class for 'type' action 
+    First parameter - element selector
+    Second parameter - string to be typed in
+    """
+    def do(self):
+        self.se.key_press(self.cparam[0], self.cparam[1])
+        
+class seleniumFocus(seleniumTypeContext) :
+    """ Action class for 'click' action
+    First parameter: element selector to be clicked
+    """
+
+    def do(self):
+        id = self.cparam[0]
+        self.se.focus(id)
+
+
 class seleniumClick(seleniumTypeContext) :
     """ Action class for 'click' action
     First parameter: element selector to be clicked
@@ -372,6 +390,8 @@ class SeleniumHelper :
         self.registerAction('isPresent',seleniumIsPresent())
         self.registerAction('mouseOver',seleniumMouseOver())
         self.registerAction('selectCombo',selectCombo(), 2)
+        self.registerAction('keyDown',seleniumKeyDown(), 2)
+        self.registerAction('focus',seleniumFocus(), 1)
         
 
     def registerAction(self,key,o,nofParam = 1, defa=None):
