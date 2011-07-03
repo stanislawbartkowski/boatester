@@ -67,7 +67,7 @@ def isLinux():
     prefix = osPrefix()
     if prefix == "linux": return True
     return False
-
+    
 def prepareRunCommand(command):
     """Modify command (binary file) with 'executable' access
     
@@ -181,6 +181,39 @@ def runBin(param, com, binarywaited):
     __waitforBin(binarywaited)
     d.restore()
     return res
+
+    """Replace variables using format (like ConfigParser) %(..)s
+    
+    Args:
+      line : line to be changed
+      param : TestParam 
+      teparam : OneTestParam
+      
+    Returns:
+      Fixed line
+      
+    Raises: 
+      Exception if variable for replacement not found
+      
+    """
+
+
+def replaceLine(line,  param,  teparam):
+    while 1 :
+        low = line.rfind("%(")
+        if low == -1 : break
+        up = line.rfind(")s")
+        if up == -1 : break
+        before = line[0: low]
+        after = line[up+2: len(line)]
+        key = line[low+2: up]
+        value = teparam.getPar(key)
+        if value == None : value = param.getPar(key)
+        if value == None : 
+            raise TestException(key + " variable for replacement not found !")
+        line = before + value + after
+        
+    return line                           
 
 
 class TestException(Exception):

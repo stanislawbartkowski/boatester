@@ -27,11 +27,14 @@ import os
 import os.path
 import time
 
-def _readC(fname):
+def _readC(fname, param, teparam):
    """ Produces ConfigP object for reading selenium files
     
     Args:
       fname : configuration file name (full path)
+      param : TestParam container
+      tepar : OneTestParam container
+
       
     Returns:
       ConfigP object created
@@ -42,7 +45,7 @@ def _readC(fname):
    if fname == None : return None
    TestBoa.exist(fname)
    logging.debug("Read selenium config file from : " + fname)
-   co = ConfigP(fname)
+   co = ConfigP(fname, param, teparam)
    return co
 
 class ConfigP :
@@ -50,15 +53,20 @@ class ConfigP :
     """ Helper class for maintaining selenium configurationf iles
     """
 
-    def __init__(self,fname):
+    def __init__(self,fname, param, teparam):
         """ Constructor for ConfigP file
 
         Args:
           fname : configuration file name, full path
+          param : TestParam container
+          tepar : OneTestParam container
         """
         f = open(fname)
-        self.lines = f.readlines()
+        list = f.readlines()
         f.close()
+        self.lines = []
+        for l in list :
+            self.lines.append(TestCaseHelper.replaceLine(l, param, teparam))
 
     """ Returns sequence of selenium action to execute
 
@@ -113,7 +121,7 @@ class ConfigFileHelper :
 
     """
 
-    def __init__(self,mainfile,testfile):
+    def __init__(self,mainfile,testfile, param, teparam):
         """ Constructor
 
         Args:
@@ -121,9 +129,10 @@ class ConfigFileHelper :
           testfile : file  path name of test selenium file (primary)
 
         """
-
-        self.mainco = _readC(mainfile)
-        self.testco = _readC(testfile)
+        self.param = param
+        self.teparam = teparam        
+        self.mainco = _readC(mainfile, self.param, self.teparam)
+        self.testco = _readC(testfile, self.param, self.teparam)
 
         
     def __getAlias(self,key):
@@ -179,10 +188,11 @@ class ConfigFileHelper :
                 pa = va.split('|')
                 for i in range(0,len(pa)) :
                   ss = pa[i]
-                  ch = ss[0]
-                  if ch == '#' :
-                    re = ss[1:]
-                    pa[i] = self.__getAlias(re)
+                  if len(ss) != 0 :
+                    ch = ss[0]
+                    if ch == '#' :
+                      re = ss[1:]
+                      pa[i] = self.__getAlias(re)
             res.append((ke,pa))
         return res
 
@@ -446,7 +456,7 @@ class SeleniumHelper :
             id = self.teparam.getTestId()
             teDir = self.param.getTestDir(id)
             testfile = os.path.join(teDir, tefile)
-        co = ConfigFileHelper(mainfile,testfile)
+        co = ConfigFileHelper(mainfile,testfile, self.param, self.teparam)
         seq = co.getSequence(name)
         for step in seq :
             key = step[0]

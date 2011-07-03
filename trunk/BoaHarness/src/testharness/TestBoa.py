@@ -385,7 +385,7 @@ class RunSuiteParam:
     """
 
 
-    def __init__(self, factory, customC, testprop, globresdir, resdir, rundir):
+    def __init__(self, factory, customC, testprop, globresdir, resdir, rundir, customdic=None):
         """ Constructor
 
         Args:
@@ -397,12 +397,16 @@ class RunSuiteParam:
         self.globresdir = globresdir
         self.resdir = resdir
         self.rundir = rundir
+        self.customdic = customdic
         
     def createDict(self) :
          dict = {}
          dict['globresdir'] = self.globresdir
          dict['resdir'] = self.resdir
          dict['rundir'] = self.rundir
+         if self.customdic != None :
+          for key in self.customdic:
+             dict[key] = self.customdic[key]
          return dict
 
 
