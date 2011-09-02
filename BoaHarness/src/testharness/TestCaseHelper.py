@@ -119,10 +119,10 @@ def __waitforBin(bin):
     Nothing
     """
     if not isLinux() : return
-    logging.debug("Wait for " + bin)
     while True:
         time.sleep(1)
         tmp = _getTmpName()
+        logging.debug("Wait for " + bin)
         logging.debug("Read ps output to temp " + tmp)
         os.system("ps -aef >" + tmp)
         f = open(tmp)
@@ -131,6 +131,7 @@ def __waitforBin(bin):
         os.unlink(tmp)
         found = 0
         for l in li:
+            logging.debug(l)
             if l.find(bin) != -1:
                 found = 1
                 break
@@ -586,10 +587,29 @@ def compareFiles(param, teparam, testdir, patt, destdir):
             logging.info ("  " + dest + " - does not exist")
             res = 0
             continue
-        eq = filecmp.cmp(sou, dest)
-        if not eq:
-            logging.info("  different")
+        f1 = open(sou, "r")
+        f2 = open(dest, "r")
+        li1 = f1.readlines()
+        li2 = f2.readlines()
+        if len(li1) != len(li2) :
+            logging.info(" number of lines is different")
             res = 0
+            continue
+        for i in range(0, len(li1))  :
+             line1 = li1[i].rstrip()
+             line2 = li2[i].rstrip()
+             if line1 != line2 : 
+                 logging.info(" line number: " + str(i)  + " different")
+                 logging.info(line1)
+                 logging.info(line2)
+                 res = 0
+                 break
+             
+# 2011/08/30 - filecmp.cmp replace by manual comparing to avoid trailing whitespaces
+#        eq = filecmp.cmp(sou, dest)
+#        if not eq:
+ #           logging.info("  different")
+ #           res = 0
     return res
 
 class SampleTestCase(unittest.TestCase):
