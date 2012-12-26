@@ -101,3 +101,26 @@ verify: SELECT * FROM PROCRESTABLE
 equal RES1 2
 eof
 }}}
+== Exception signalling ==
+Stored procedure (like any other SQL statements) sometimes throws an exception (sql error code). Sometimes it is expected sometimes not. There are three possible choices.
+ * Stored procedure should executed without any exception (most cases). Any exception should fail the test.
+ * Ignore exceptions (all or one particular) if it has been thrown. Typical example is CREATE TABLE  clause where it is expected that TABLE exists already.
+ * Exception is required and fail the test if it is not thrown.
+{{{
+[setup]
+sql: CREATE OR REPLACE PROCEDURE THROWSIGNAL (IN MESS VARCHAR(100))
+P1: BEGIN
+    IF MESS IS NULL THEN RETURN; END IF;
+    SIGNAL SQLSTATE '75000' 
+             SET MESSAGE_TEXT = MESS;
+END P1
+}}}
+{{{
+sql: { CALL THROWSIGNAL(NULL); }
+sqlexception('75000'): { CALL THROWSIGNAL('Terrible error'); }
+sqlexception('75000'): { CALL THROWSIGNAL(NULL); }
+sqlexceptionexpected('75000'): { CALL THROWSIGNAL('Terrible error'); }
+print: This test should fail 
+sqlexceptionexpected('75000'): { CALL THROWSIGNAL(NULL); }
+}}}
+This simple example covers all cases. The last test will fail because the exception is required here.
