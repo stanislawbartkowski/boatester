@@ -183,4 +183,20 @@ db2.sql: ALTER TABLE PERSONID ALTER COLUMN ID SET GENERATED ALWAYS AS IDENTITY
 iany.sql:ALTER TABLE PERSONID ALTER ID DEFAULT AUTOINCREMENT
 sql: INSERT INTO PERSONID VALUES(DEFAULT,'John Smith')
 }}}
+To use vendor specific syntax it is enough to comment and uncomment db2type property. *Important* The meaning of dbtype property is meaningless, it is used only as a prefix for sql test lines. It does not have any additional meaning attached.
 = More detailed description =
+== Prerequisites ==
+ * [http://code.google.com/p/pyodbc/ pyodbc] 
+ * ODBC connection to the database being under test configured and valid
+== Common property file ==
+|| *Parameter name* || *Required* || *Description* || 
+|| db2type || Optional || Prefix for sql test lines to select vendor specific syntax||
+|| odbcconnection || Required || ODBC connection string ||
+|| sqlfile || Required || The text file name containing sql test lines, test scenario ||
+
+Example:
+{{{
+[defaults]
+odbcconnection=DSN=TSAMPLE;UID=db2inst2;PWD=db2inst2
+sqlfile=sqlfile.test
+}}}
