@@ -275,3 +275,7 @@ By means of *odbcrun=* automatic testing is launched, no coding is required. But
 The example is provided [http://code.google.com/p/boatester/source/browse/#svn%2Ftrunk%2FTestBoaHarness%2Fsrc%2FTestResource%2FTest8 here].
 = API description =
 Full source code with comments is available [http://code.google.com/p/boatester/source/browse/trunk/BoaHarness/src/testharness/ODBCHelper.py here].
+= Future =
+ * More validation checkers (notequal etc..)
+ * More advanced test setup, for instance data loading.
+ * Performance or throughput testing (?)
