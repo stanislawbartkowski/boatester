@@ -268,4 +268,5 @@ Action and parameters are separated by space. If space is used inside condition 
 
 == Example ==
 [http://code.google.com/p/boatester/source/browse/#svn%2Ftrunk%2FTestBoaHarness%2Fsrc%2FTestResource%2Fresource common resource]
+
 [http://code.google.com/p/boatester/source/browse/#svn%2Ftrunk%2FTestBoaHarness%2Fsrc%2FTestResource%2Ftest7%253Fstate%253Dclosed test specific files]
