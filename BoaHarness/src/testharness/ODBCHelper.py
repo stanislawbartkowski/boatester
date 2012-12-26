@@ -42,6 +42,7 @@ _COMMIT='commit'
 _VERIFY='verify:'
 _PRINT='print:'
 _SQLCOMMANDSTARTEXCEPTION="sqlexception:"
+_SQLCOMMANDEXCEPTIONEXPECTED="sqlexceptionexpected:"
 _CALLTEST="calltest:"
 
 _SPLITWORDINVER='(?<!\\\\) '
@@ -107,17 +108,19 @@ class CallSQL :
      """ Class for keeping data for sql statement execution
      """
     
-     def __init__(self, he, sql, exceptionexpected, add): 
+     def __init__(self, he, sql, exceptionexpected, exceptionrequired,  add): 
          """ Constructor
          Args:
            he reference to ODBCHelper
            sql sql statement
            exceptionexpected started with sqlexception:
+           exceptionrequired fail if exception not thrown
            add addional parameter, example: sql(52000 John 28), can be None
          """
          self.__he = he
          self.__sql = sql
          self.__exceptionexpected = exceptionexpected
+         self.__exceptionrequired = exceptionrequired
          self.__param = None
          self.__sqlerror = None
          first = True
@@ -128,7 +131,7 @@ class CallSQL :
             for l in split :
                  v = l.replace(_ESCAPESPACE, ' ').strip()
                  # replace escaped space with normal space
-                 if first and exceptionexpected :
+                 if first and (exceptionexpected  or exceptionrequired):
                      # first file is excpected sqlcode (if not empty)
                      if v != '' :
                          self.__sqlerror = v
@@ -142,10 +145,12 @@ class CallSQL :
      def execute(self):
          """ Execute sql statement 
          """
-         if self.__exceptionexpected :
+         if self.__exceptionexpected or  self.__exceptionrequired:
                  # exceptions is expected, enclose in try except clause
+                 executedwithoutexception = False
                  try :
                      self.__he.execute(self.__sql, self.__param)
+                     executedwithoutexception = True
                  except pyodbc.Error, e :
                      sqlerror = e[0]
                      logging.debug(str(e))
@@ -153,6 +158,9 @@ class CallSQL :
                      if self.__sqlerror != None :
                          logging.debug("Expected sqlcode " + self.__sqlerror)
                          self.__he.testcase.assertEquals(self.__sqlerror, sqlerror)
+                 # verify exception required
+                 if self.__exceptionrequired and executedwithoutexception :
+                     self.__he.testcase.fail('SQL exception expected but executed smoothly')
          else: self.__he.execute(self.__sql, self.__param)
          
      def append(self, s):
@@ -378,7 +386,7 @@ class ODBCHelper() :
              # check number of parameters
              expected = 2
              if action == 1 : expected = 0
-             if action == 2 or action == 3 or action == 6 : expected = 1
+             if action == 2 or action == 3 or action == 6 or action == 7 : expected = 1
              if len(elemver) -1 != expected :
                  error = name + " number of arguments invalid, " + str(expected) + " expected, " + str(len(elemver) -1)  + " found"
                  raise TestCaseHelper.TestException(error)
@@ -398,7 +406,7 @@ class ODBCHelper() :
                  self.testcase.assertIsNotNone(val1)
                  
      def __createListOf(self) :
-         listof = [_SQLCOMMANDSTART,_COMMENT, _COMMIT, _VERIFY, _PRINT, _SQLCOMMANDSTARTEXCEPTION, _CALLTEST]
+         listof = [_SQLCOMMANDSTART,_COMMENT, _COMMIT, _VERIFY, _PRINT, _SQLCOMMANDSTARTEXCEPTION, _CALLTEST, _SQLCOMMANDEXCEPTIONEXPECTED]
          return listof   
 
      def __executeSectionLines(self, seclines):
@@ -416,11 +424,11 @@ class ODBCHelper() :
          for l in seclines :
              (op, content,  add) = self.__linetokenizer(l, listof)
              # mark the end of validation data
-             if op == 0 or op == 2 or op == 5 or op == 6: verify = False
-             if op == 0  or  op == 5: 
+             if op == 0 or op == 2 or op == 5 or op == 6 or op ==7: verify = False
+             if op == 0  or  op == 5 or op == 7 :
                  # sql statement with exception expected or not
                  self.__runactsql()
-                 self.__actsql = CallSQL(self, content,(op == 5), add)
+                 self.__actsql = CallSQL(self, content,(op == 5), (op == 7),  add)
                  # statement is not executed now, only cached for later execution
                  # sql statement can be multilined
                  continue
