@@ -244,4 +244,24 @@ List of action reserved names. Action reserved name should start from the first 
 || -- || No || No || Comment ||
 || print: || No || No || Python 'print' command. ||
 || commit: || No || No || Issue commit ||
-|| calltest: || No || No || Start execution of another test. After completing the test (if not failed) continues execution of the current test. ||
+|| calltest: || No || No || Start execution of another test. After completing the test (if not failed) continues execution the current test. ||
+|| verify: || No || Next lines contain validation criteria for rows fetched || Executes the statement and the next lines validates the rows retrieved from the sql statement just executed.||
+
+=== Verify line format ===
+Format for lines validating the rows retrieved (*verify:* action described above). Every lines is applied to the next row retrieved from the statement attached to the *verify:* action.
+
+* Condition 1, Condition 2 .. *
+
+Conditions applied are separated by comma (,). If comma is used inside condition should be escaped (\,).
+
+Single condition format.
+
+*action name parameter1 parameter2 *
+
+Action and parameters are separated by space. If space is used inside condition should be escaped (\ ). Parameter1 and Parameter2 has meaning related to the action. The following action is recognized.
+
+|| *Action name* || Parameter 1 || Parameter 2 || Description ||
+|| equal || Column name || Value expected || Fails the test if column is not equal to the value ||
+|| isnull || Column name || No || Fails if the column contains not NULL value ||
+|| isnotnull || Column name || No || Opposite to above. Fails if column contains NULL value ||
+|| eof || No || No || End of rows fetched are expected here. The test fails if next row is fetched ||
