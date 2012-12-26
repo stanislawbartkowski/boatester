@@ -270,3 +270,8 @@ Action and parameters are separated by space. If space is used inside condition 
 [http://code.google.com/p/boatester/source/browse/#svn%2Ftrunk%2FTestBoaHarness%2Fsrc%2FTestResource%2Fresource common resource]
 
 [http://code.google.com/p/boatester/source/browse/#svn%2Ftrunk%2FTestBoaHarness%2Fsrc%2FTestResource%2Ftest7%253Fstate%253Dclosed test specific files]
+= More complicated test =
+By means of *odbcrun=* automatic testing is launched, no coding is required. But it is also possible to take advantage of SQLTester goodies and combined it with Python testunit if more complicated test scenario is required.
+The example is provided [http://code.google.com/p/boatester/source/browse/#svn%2Ftrunk%2FTestBoaHarness%2Fsrc%2FTestResource%2FTest8 here].
+= API description =
+Full source code with comments is available [http://code.google.com/p/boatester/source/browse/trunk/BoaHarness/src/testharness/ODBCHelper.py here].
