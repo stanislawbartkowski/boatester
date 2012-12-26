@@ -52,4 +52,28 @@ eof
 }}}
 
 In this example SQLTester ignores only 42S01 sql code, any other sql code will fail the test. Unfortunately, this code describing that table already exists is specific for DB2 and can be not valid for any other database.
-Lines after *verify* are related to rows consecutively fetched from result set. The command *eof* means that no more row is expected at that moment.
+Lines after *verify* are related to rows consecutively fetched from the result set. The command *eof* means that no more rows are expected at that moment or the test fails otherwise.
+
+= Stored procedure =
+== Invocation
+The purpose of SQLTester is not to verify the correctness of database SQL engine but to test stored procedure created by a developer.
+SQLTester (like pyodbc/ODBC) supports ODBC call escape format ([http://code.google.com/p/pyodbc/wiki/StoredProcedures] and vendor specific (DB2 in this example) calling clause.
+
+{{{
+[setup]
+sql: CREATE OR REPLACE PROCEDURE COUNTMESS(OUT C INTEGER)
+P1: BEGIN ATOMIC
+  SELECT COUNT(*) INTO C FROM MESS;
+ END P1
+}}} 
+
+{{{
+[test3]
+sql: DELETE FROM MESS
+sql: { CALL LOGMESS('Next successfull step') }
+sql: CALL LOGMESS('Another method') 
+verify: SELECT * FROM MESS
+isnotnull M
+isnotnull M
+eof
+}}}
