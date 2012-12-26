@@ -237,5 +237,11 @@ test line2
  # line not started with any reserved name is regarded as the continuing of the previous line
 
 List of action reserved names. Action reserved name should start from the first column. If terminated with : then there should be no space between word and : For instance *sql:* , not *sql :*
-|| Action name || Parameters possible || Continuing || Description ||
+|| *Action name* || *Parameters possible* || *Continuing* || *Description* ||
 || sql: || List of parameters for marker parameters. Parameters are separated by space. For space inside parameter use escape sequence (\ ) || Any next line not started with reserved name is regarding as sql continuing || Executes sql statement. Can contain position markers (?). In this case parameter values are taken from action parameter sequence. Any exception thrown fails the statement and the whole test ||
+|| sqlexception: || The first parameter could be empty or is equal the the sql code expected, the next parameters are position markers values || As above || The same as above but sql exception is caught. If sql error parameter is defined then only error code equals to the sql exception is valid. If sql error parameter is not defined than all exceptions are ignored ||
+|| sqlexceptionexpected: || As above || As above || As above. The only difference that sql executed normally (without exception) fails the test ||
+|| -- || No || No || Comment ||
+|| print: || No || No || Python 'print' command. ||
+|| commit: || No || No || Issue commit ||
+|| calltest: || No || No || Start execution of another test. After completing the test (if not failed) continues execution of the current test. ||
