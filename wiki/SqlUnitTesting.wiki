@@ -152,3 +152,18 @@ equal RES1 9
 eof
 }}}
 So we are very happy that 2+2=4 holds true also in database world.
+= Parameter markers =
+Sometimes it is convenient to use parameter markers instead of hardcoded values. Although the main advantage of prepared statements - prepare once and then reuse it any times thus improving performance - is not consumed here.
+{{{
+[test7]
+sql: DELETE FROM MESS
+sql(new\ message): INSERT INTO MESS VALUES(?)
+sql: DELETE FROM TEST2
+sql(2012-02-03): INSERT INTO TEST2 VALUES(?)
+sql(next\ message):{ CALL LOGMESS(?) }
+verify: SELECT * FROM MESS ORDER BY M
+equal M new\ message
+equal M next\ message
+eof
+}}}
+There could be more then one parameter markers and values. Delimiter is space and it is possible (like in this example) escape space inside value.
