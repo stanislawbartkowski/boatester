@@ -219,14 +219,20 @@ Two SQL test files are used. The first is common and is searched in global resou
 The sql test file is divided into "sections". Section is a sequence of lines starting with section header *[secion name]* until next section header is found or end of file is reached
 {{{
 [default]
-line1 
-line2 
+test line1 
+test line2 
 ....
-line n
+test line n
 [test case1]
-line1
-line2
+test line1
+test line2
 ....
 [test case2]
 ...
 }}} 
+[ character meaning the section header should be the first character in the line.
+=== Test line format ===
+ # *test action* line content
+ # *test action(parameter1 parameter2 ..)* line content
+ # line does not start with any reserved name is regarded as the continuing of the previous line
+  
