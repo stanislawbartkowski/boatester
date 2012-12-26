@@ -1,7 +1,8 @@
-# ODBC/SQL testing support
+# A simple way to create SQL unit testing
 
 = Introduction =
 
-A simple way to create SQL unit testing
-
 <wiki:toc max_depth="3" />
+
+There is no standard framework for SQL unit testing. By "SQL unit testing" I mean testing the SQL server code being developed: SP (stored procedures) and UDF (user defined functions). 
+The most common method is to use the client method, for instance: JUnit for Java and JDBC, [http://docs.python.org/2/library/unittest.html PyUnit] for Python and C/C++ framework (like [http://code.google.com/p/googletest/ googletest] for ODBC client.
