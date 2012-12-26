@@ -1,5 +1,14 @@
 [default]
 calltest: setup
+calltest: main
+calltest: test1
+calltest: test2
+calltest: test3
+calltest: test4
+calltest: test5
+calltest: test6
+
+[main]
 sql:DELETE FROM MESS
 sql:INSERT INTO MESS VALUES('aaaaa')
 sql:INSERT INTO MESS VALUES('bbbbb')
@@ -50,3 +59,62 @@ equal C 5
 sql: DELETE FROM TEST1
 sql(name 5): INSERT INTO TEST1 VALUES(?,?)
 
+[test1]
+sqlexception: CREATE TABLE MESS (M VARCHAR(100))
+sql: DELETE FROM MESS
+sql: INSERT INTO MESS VALUES('aaaa')
+sql: INSERT INTO MESS VALUES('bbbb')
+verify: SELECT COUNT(*) AS C FROM MESS
+equal C 2
+
+[test2]
+sqlexception(42S01): CREATE TABLE MESS (M VARCHAR(100))
+sql: DELETE FROM MESS
+sql: INSERT INTO MESS VALUES('aaaa')
+sql: INSERT INTO MESS VALUES('bbbb')
+verify: SELECT * FROM MESS ORDER BY M
+isnotnull M
+equal M bbbb
+eof
+[test3]
+sql: DELETE FROM MESS
+sql: { CALL LOGMESS('Next successfull step') }
+sql: CALL LOGMESS('Another method') 
+verify: SELECT * FROM MESS
+isnotnull M
+isnotnull M
+eof
+[test4]
+calltest: test3
+sqlexception: CREATE TABLE PROCRESTABLE (RES1 BIGINT)
+sql: BEGIN ATOMIC
+ DECLARE C INTEGER;
+ CALL COUNTMESS(C);
+ DELETE FROM PROCRESTABLE;
+ INSERT INTO PROCRESTABLE VALUES(C);
+END
+verify: SELECT * FROM PROCRESTABLE
+equal RES1 2
+eof
+
+[test5]
+sql: CALL THROWSIGNAL(NULL); 
+sqlexception(75000): CALL THROWSIGNAL('Terrible error');
+sqlexception(75000): CALL THROWSIGNAL(NULL);
+sqlexceptionexpected(75000): CALL THROWSIGNAL('Terrible error');
+print: This test should fail 
+--sqlexceptionexpected(75000): CALL THROWSIGNAL(NULL); 
+
+[test6]
+--sql: { ? = CALL ADDNUMBER(5,4); }
+sql: BEGIN
+  DECLARE SUM INTEGER;
+  DELETE FROM PROCRESTABLE;
+  SET SUM = ADDNUMBER(4,5);
+  INSERT INTO PROCRESTABLE VALUES(SUM);
+  INSERT INTO PROCRESTABLE VALUES(ADDNUMBER(2,2));
+END
+verify: SELECT * FROM PROCRESTABLE ORDER BY RES1
+equal RES1 4
+equal RES1 9
+eof
