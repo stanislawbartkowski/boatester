@@ -166,4 +166,4 @@ equal M new\ message
 equal M next\ message
 eof
 }}}
-There could be more then one parameter markers and values. Delimiter is space and it is possible (like in this example) escape space inside value.
+There could be more than one parameter markers and values. Delimiter is a space and it is possible (like in this example) escape space inside value.
