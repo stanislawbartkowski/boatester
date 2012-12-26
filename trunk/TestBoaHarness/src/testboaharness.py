@@ -1,4 +1,5 @@
-import os.path
+import sys
+sys.path.append('/home/sbartkowski/boatester/BoaHarness/src/testharness')
 from TestBoa import *
 from TestCaseHelper import *
 import logging
@@ -36,8 +37,6 @@ class ReportTestCase(unittest.TestCase):
         res = compareFiles(self.param, self.teparam, "out", ".lst", "out")
         self.assertTrue(res)
 
-
-
 class MyFactory:
 
     def constructTestCase(self, param, tepar):
@@ -55,8 +54,8 @@ if __name__ == "__main__":
     rundir = sys.argv[2]
     testspec = sys.argv[3]
     testid = sys.argv[4]
-    globresource = resource
-    propfile = None
+    globresource = resource+'/resource'
+    propfile = globresource + "/testcommon.dat"
     factory = TestCaseFactory()
     factory.register(MyFactory())
     suiteparam = RunSuiteParam(factory, None, propfile, globresource, resource, rundir)

@@ -1,0 +1,52 @@
+[default]
+calltest: setup
+sql:DELETE FROM MESS
+sql:INSERT INTO MESS VALUES('aaaaa')
+sql:INSERT INTO MESS VALUES('bbbbb')
+sql:INSERT INTO MESS VALUES('ccccc')
+sql:INSERT INTO MESS VALUES('fffff')
+commit:
+sql: BEGIN
+ DECLARE C INTEGER;
+ CALL COUNTMESS(C);
+ DELETE FROM PROCRESTABLE;
+ INSERT INTO PROCRESTABLE VALUES(C);
+ COMMIT;
+END
+verify: SELECT * FROM PROCRESTABLE
+equal RES1 4
+eof
+--------------------------------------------------
+verify: SELECT * FROM MESS ORDER BY M
+equal M aaaaa
+sql: DELETE FROM TEST
+sql: INSERT INTO TEST VALUES('a b')
+verify: SELECT TRIM(SSS) AS SSS FROM TEST
+equal SSS a\ b
+--------------------------------------------------
+sql: DELETE FROM TEST1 
+sql: INSERT INTO TEST1 VALUES('abd',55)
+verify: SELECT * FROM TEST1
+equal sss abd,equal num 55
+print: check date
+----------------------------------------------------
+sql: DELETE FROM TEST2
+sql: INSERT INTO TEST2 VALUES('2012-01-01')
+verify: SELECT * FROM TEST2
+equal dt 2012-01-01, isnotnull dt
+----------------------------------------------------
+sql: DELETE FROM TEST2
+sql: INSERT INTO TEST2 VALUES(NULL)
+verify: SELECT * FROM TEST2
+isnull dt 
+----------------------------------------------------
+sqlexception(75000): { CALL MYSIGNAL('message') } 
+------------------------------------------
+sql(rrrrr): INSERT INTO MESS VALUES(?)
+commit:
+verify: SELECT COUNT(*) AS C FROM MESS
+equal C 5 
+-----------------------------------------
+sql: DELETE FROM TEST1
+sql(name 5): INSERT INTO TEST1 VALUES(?,?)
+

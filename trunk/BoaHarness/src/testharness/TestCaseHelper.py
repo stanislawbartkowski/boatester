@@ -22,7 +22,6 @@ __authors__ = [
 
 import logging
 import filecmp
-import logging
 import os
 import shutil
 import tempfile
