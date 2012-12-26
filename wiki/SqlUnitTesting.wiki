@@ -200,3 +200,15 @@ Example:
 odbcconnection=DSN=TSAMPLE;UID=db2inst2;PWD=db2inst2
 sqlfile=sqlfile.test
 }}}
+== Test specific property file ==
+It is a test property file (test.properties) in the test case directory. It could contain any of the common property (described above). If property is found in test specific file then it overrides the common property.
+One additional property can be defined also:
+|| *Parameter name* || *Required* || *Description* || 
+|| odbcrun || Optional || It triggers automatically execution of the test case scenario with the name being the value of the parameter. If value is empty or * then [default] test is used||
+
+Example: 
+{{{
+[defaults]
+descr=Test case scenario for ODBC test
+odbcrun=*
+}}} 
