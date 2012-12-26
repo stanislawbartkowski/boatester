@@ -5,4 +5,14 @@
 <wiki:toc max_depth="3" />
 
 There is no standard framework for SQL unit testing. By "SQL unit testing" I mean testing the SQL server code being developed: SP (stored procedures) and UDF (user defined functions). 
-The most common method is to use the client method, for instance: JUnit for Java and JDBC, [http://docs.python.org/2/library/unittest.html PyUnit] for Python and C/C++ framework (like [http://code.google.com/p/googletest/ googletest] for ODBC client.
+The most common method is to use the client framework, for instance: JUnit for Java and JDBC, [http://docs.python.org/2/library/unittest.html PyUnit] for Python and C/C++ framework (like [http://code.google.com/p/googletest/ googletest] for ODBC client.
+There is nothing wrong with that but any time it requires a lot of manual coding, even for the simple test scenario. So I decided to create my own simple SQL unit test framework. The purpose is to provide some method for running and executing SQL test scenario without coding. 
+
+= General description =
+The SQLTester is a plugin for BoaTester. BoaTester is a general framework for supervising the whole testing process, SQLTester is only the way of executing one (or more) test cases.
+As a method for connecting and executing SQL I chose the [http://code.google.com/p/pyodbc/ pyodbc]. SO before running any test ODBC connection should be set and valid and also pyodbc package should be installed.
+Test scenario (execution steps and validation points) is described in a text file. The file is divided into "sections" (marked by [section] line at the beginning). Every "section" describes a piece of test steps. A line in section contains one step. There are three types of lines:
+ * Line (also several lines) containing SQL statement to execute, also store procedure invocation.
+ * Validation. Validation contains SQL SELECT statement to execute and check that columns contains expected value (also NULL and NOT NULL)
+ * Comment
+ * Calling another section.
