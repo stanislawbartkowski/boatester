@@ -1,0 +1,7 @@
+# ODBC/SQL testing support
+
+= Introduction =
+
+In this document is described how to create custom test case types and API available.
+
+<wiki:toc max_depth="3" />
