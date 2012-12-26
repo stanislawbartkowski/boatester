@@ -34,3 +34,22 @@ sql: INSERT INTO MESS VALUES('bbbb')
 verify: SELECT COUNT(*) AS C FROM MESS
 equal C 2
 }}}
+
+'sqlexception' means that SQLTester should caught sql execption thrown by sql statement. In this example the exception is expected because table MESS could exist already. It is possible to ignore all exceptions (like this example) or ignore only one expected sql code. 
+
+= Another simple example ==
+As above but check that table contains two rows with not NULL values and there is not third row.
+{{{
+[test2]
+sqlexception(42S01): CREATE TABLE MESS (M VARCHAR(100))
+sql: DELETE FROM MESS
+sql: INSERT INTO MESS VALUES('aaaa')
+sql: INSERT INTO MESS VALUES('bbbb')
+verify: SELECT * FROM MESS ORDER BY M
+isnotnull M
+equal M bbbb
+eof
+}}}
+
+In this example SQLTester ignores only 42S01 sql code, any other sql code will fail the test. Unfortunately, this code describing that table already exists is specific for DB2 and can be not valid for any other database.
+Lines after *verify* are related to rows consecutively fetched from result set. The command *eof* means that no more row is expected at that moment.
