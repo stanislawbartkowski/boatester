@@ -10,9 +10,27 @@ There is nothing wrong with that but any time it requires a lot of manual coding
 
 = General description =
 The SQLTester is a plugin for BoaTester. BoaTester is a general framework for supervising the whole testing process, SQLTester is only the way of executing one (or more) test cases.
-As a method for connecting and executing SQL I chose the [http://code.google.com/p/pyodbc/ pyodbc]. SO before running any test ODBC connection should be set and valid and also pyodbc package should be installed.
-Test scenario (execution steps and validation points) is described in a text file. The file is divided into "sections" (marked by [section] line at the beginning). Every "section" describes a piece of test steps. A line in section contains one step. There are three types of lines:
- * Line (also several lines) containing SQL statement to execute, also store procedure invocation.
- * Validation. Validation contains SQL SELECT statement to execute and check that columns contains expected value (also NULL and NOT NULL)
+As a method for connecting and executing SQL I chose the [http://code.google.com/p/pyodbc/ pyodbc]. So before running any test ODBC connection should be set and valid and also pyodbc package should be installed.
+Test scenario (execution steps and validation points) is described in a text file. The file is divided into "sections" (marked by [section] line at the beginning). Every "section" describes a sequence of test steps. A line in section contains one step. There are three types of lines:
+ * Line (also several lines) containing SQL statement to execute, also stored procedure invocation.
+ * Validation. Validation contains SQL SELECT statement to execute and check that columns contains expected value (also NULL and NOT NULL). So "validation" is based on checking that (result set or table) rows contain desired value. 
  * Comment
  * Calling another section.
+
+Executing test case means executing line after line of test section content. "Test passed" means that the test case has been executed to the last line without any sql exception not caught and all validation points passed. 
+
+= Simple example =
+Let's consider a very simple test case scenario. 
+ # Create MESS table with one M VARCHAR(100) column
+ # Add two rows
+ # Check that table MESS contains two rows
+
+{{{
+[test1]
+sqlexception: CREATE TABLE MESS (M VARCHAR(100))
+sql: DELETE FROM MESS
+sql: INSERT INTO MESS VALUES('aaaa')
+sql: INSERT INTO MESS VALUES('bbbb')
+verify: SELECT COUNT(*) AS C FROM MESS
+equal C 2
+}}}
