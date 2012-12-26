@@ -2,6 +2,6 @@
 
 = Introduction =
 
-In this document is described how to create custom test case types and API available.
+A simple way to create SQL unit testing
 
 <wiki:toc max_depth="3" />
