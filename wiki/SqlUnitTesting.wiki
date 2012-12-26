@@ -116,11 +116,39 @@ P1: BEGIN
 END P1
 }}}
 {{{
-sql: { CALL THROWSIGNAL(NULL); }
-sqlexception('75000'): { CALL THROWSIGNAL('Terrible error'); }
-sqlexception('75000'): { CALL THROWSIGNAL(NULL); }
-sqlexceptionexpected('75000'): { CALL THROWSIGNAL('Terrible error'); }
+sql: CALL THROWSIGNAL(NULL); 
+sqlexception(75000): CALL THROWSIGNAL('Terrible error');
+sqlexception(75000): CALL THROWSIGNAL(NULL);
+sqlexceptionexpected(75000): CALL THROWSIGNAL('Terrible error');
 print: This test should fail 
-sqlexceptionexpected('75000'): { CALL THROWSIGNAL(NULL); }
+sqlexceptionexpected(75000): CALL THROWSIGNAL(NULL);
 }}}
 This simple example covers all cases. The last test will fail because the exception is required here.
+*Warning* Unfortunately, ODBC call sequence format ( {CALL THROWSIGNAL(NULL); ) does not pass sql error codes. So if sql error detection matters one should use vendor specific stored procedure calling clause.
+== UDF User Defined Functions
+The same problem related to OUT parameters for stored procedure address also testing UDF. There is no way to get and test the return value of the UDF but we can use staging table for passing the values.
+{{{
+[setup]
+sql: CREATE OR REPLACE FUNCTION ADDNUMBER(IN N1 INTEGER, IN N2 INTEGER) 
+  RETURNS INTEGER
+P1: BEGIN
+  RETURN N1 + N2;
+END
+}}}
+{{{
+[test6]
+--it does not work
+--sql: { ? = CALL ADDNUMBER(5,4); }
+sql: BEGIN
+  DECLARE SUM INTEGER;
+  DELETE FROM PROCRESTABLE;
+  SET SUM = ADDNUMBER(4,5);
+  INSERT INTO PROCRESTABLE VALUES(SUM);
+  INSERT INTO PROCRESTABLE VALUES(ADDNUMBER(2,2));
+END
+verify: SELECT * FROM PROCRESTABLE ORDER BY RES1
+equal RES1 4
+equal RES1 9
+eof
+}}}
+So we are very happy that 2+2=4 holds true also in database world.
