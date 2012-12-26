@@ -55,7 +55,7 @@ In this example SQLTester ignores only 42S01 sql code, any other sql code will f
 Lines after *verify* are related to rows consecutively fetched from the result set. The command *eof* means that no more rows are expected at that moment or the test fails otherwise.
 
 = Stored procedure =
-== Invocation
+== Invocation ==
 The purpose of SQLTester is not to verify the correctness of database SQL engine but to test stored procedure created by a developer.
 SQLTester (like pyodbc/ODBC) supports ODBC call escape format ([http://code.google.com/p/pyodbc/wiki/StoredProcedures] and vendor specific (DB2 in this example) calling clause.
 
@@ -75,5 +75,29 @@ sql: CALL LOGMESS('Another method')
 verify: SELECT * FROM MESS
 isnotnull M
 isnotnull M
+eof
+}}}
+== OUT parameters ==
+Unfortunately, neither SQLTester nor pyodbc does not support direct getting and testing OUT parameter value.
+The only way is to enclose stored procedure returning value via OUT parameter by some code (often vendor specific), put this value to a staging table and and check the row in this table using method described above.
+{{{
+[setup]
+sql: CREATE OR REPLACE PROCEDURE COUNTMESS(OUT C INTEGER)
+P1: BEGIN ATOMIC
+  SELECT COUNT(*) INTO C FROM MESS;
+ END P1
+}}}
+{{{
+[test4]
+calltest: test3
+sqlexception: CREATE TABLE PROCRESTABLE (RES1 BIGINT)
+sql: BEGIN ATOMIC
+ DECLARE C INTEGER;
+ CALL COUNTMESS(C);
+ DELETE FROM PROCRESTABLE;
+ INSERT INTO PROCRESTABLE VALUES(C);
+END
+verify: SELECT * FROM PROCRESTABLE
+equal RES1 2
 eof
 }}}
