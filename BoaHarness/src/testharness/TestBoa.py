@@ -1,5 +1,5 @@
 #
-# Copyright [2010] the stanislaw.bartkowski@gmail.com
+# Copyright [2013] the stanislaw.bartkowski@gmail.com
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import sys
 import unittest
 
 import TestCaseHelper
+import ODBCTestCase
 
 _TEST = "test"
 
@@ -322,9 +323,7 @@ class TestCaseFactory:
 
     Attributes:
       factory : queue with all factory registered
-
     """
-
 
     def __init__(self):
         """ Contructor
@@ -333,6 +332,7 @@ class TestCaseFactory:
         self.factory = []
         self.register(PythonUnitTestFactory())
         self.register(CommandUnitTestFactory())
+        self.register(ODBCTestCase.ODBCUnitTestFactory())
 
     def register(self, fa):
         """ Register next factory
@@ -349,7 +349,7 @@ class TestCaseFactory:
         self.factory.append(fa)
 
     def getTestCase(self, param, tepar):
-        """ Return test case by looking up in factories defined
+        """ Return test case by looking up in the factories defined
 
         Args:
           param : TestParam container
