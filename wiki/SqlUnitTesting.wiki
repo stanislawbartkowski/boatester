@@ -212,3 +212,21 @@ Example:
 descr=Test case scenario for ODBC test
 odbcrun=*
 }}} 
+== SQL test file ==
+=== Description ===
+Two SQL test files are used. The first is common and is searched in global resource directory. It could contain some test scenario common for all test cases. For instance: common [setup] scenario. The second is local test file contained in test case directory. The SQLTester while resolving test case name firstly looks into local test file and secondly into global.
+=== Format ===
+The sql test file is divided into "sections". Section is a sequence of lines starting with section header *[secion name]* until next section header is found or end of file is reached
+{{{
+[default]
+line1 
+line2 
+....
+line n
+[test case1]
+line1
+line2
+....
+[test case2]
+...
+}}} 
