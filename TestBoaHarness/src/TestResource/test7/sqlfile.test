@@ -1,12 +1,13 @@
 [default]
 calltest: setup
-calltest: main
-calltest: test1
-calltest: test2
-calltest: test3
-calltest: test4
-calltest: test5
-calltest: test6
+--calltest: main
+--calltest: test1
+--calltest: test2
+--calltest: test3
+--calltest: test4
+--calltest: test5
+--calltest: test6
+calltest: test7
 
 [main]
 sql:DELETE FROM MESS
@@ -118,3 +119,15 @@ verify: SELECT * FROM PROCRESTABLE ORDER BY RES1
 equal RES1 4
 equal RES1 9
 eof
+
+[test7]
+sql: DELETE FROM MESS
+sql(new\ message): INSERT INTO MESS VALUES(?)
+sql: DELETE FROM TEST2
+sql(2012-02-03): INSERT INTO TEST2 VALUES(?)
+sql(next\ message):{ CALL LOGMESS(?) }
+verify: SELECT * FROM MESS ORDER BY M
+equal M new\ message
+equal M next\ message
+eof
+

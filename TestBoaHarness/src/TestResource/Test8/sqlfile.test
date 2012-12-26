@@ -1,0 +1,7 @@
+[default]
+sql:DELETE FROM MESS
+[check]
+verify: SELECT COUNT(*) AS C FROM MESS
+equal C 100
+
+
