@@ -167,3 +167,20 @@ equal M next\ message
 eof
 }}}
 There could be more than one parameter markers and values. Delimiter is a space and it is possible (like in this example) escape space inside value.
+= Vendor specific =
+One of the downside of a database programming is to deal with different vendor specific syntax. It matters particularly if we don't want to be limited to only the common subset of all dialects. There is no simple solution to this problem. But SQLTester provides simple solution to run the same test and to overcome some problems. 
+Assume that we want to create a table with autoincrement field. SQLTester allows to define a 'dbtype' parameter and to qualify some vendor specific definitions.
+{{{
+dbtype=db2
+#db2type=iany
+}}}
+{{{
+[setup]
+sql: CREATE TABLE PERSONID (ID BIGINT NOT NULL, PERSONCODE VARCHAR(100))
+-- DB2 specific syntax
+db2.sql: ALTER TABLE PERSONID ALTER COLUMN ID SET GENERATED ALWAYS AS IDENTITY
+-- SQLAnywhere specific syntax
+iany.sql:ALTER TABLE PERSONID ALTER ID DEFAULT AUTOINCREMENT
+sql: INSERT INTO PERSONID VALUES(DEFAULT,'John Smith')
+}}}
+= More detailed description =
