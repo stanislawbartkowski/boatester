@@ -258,9 +258,9 @@ Single condition format.
 
 *action name parameter1 parameter2 *
 
-Action and parameters are separated by space. If space is used inside condition should be escaped (\ ). Parameter1 and Parameter2 has meaning related to the action. The following action is recognized.
+Action and parameters are separated by space. If space is used inside condition should be escaped (\ ). Parameter1 and Parameter2 has meaning related to the action. The following actions are recognized.
 
-|| *Action name* || Parameter 1 || Parameter 2 || Description ||
+|| *Action name* || *Parameter 1* || *Parameter 2* || *Description* ||
 || equal || Column name || Value expected || Fails the test if column is not equal to the value ||
 || isnull || Column name || No || Fails if the column contains not NULL value ||
 || isnotnull || Column name || No || Opposite to above. Fails if column contains NULL value ||
