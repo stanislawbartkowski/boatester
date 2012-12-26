@@ -234,5 +234,8 @@ test line2
 === Test line format ===
  # *test action* line content
  # *test action(parameter1 parameter2 ..)* line content
- # line does not start with any reserved name is regarded as the continuing of the previous line
-  
+ # line not started with any reserved name is regarded as the continuing of the previous line
+
+List of action reserved names. Action reserved name should start from the first column. If terminated with : then there should be no space between word and : For instance *sql:* , not *sql :*
+|| Action name || Parameters possible || Continuing || Description ||
+|| sql: || List of parameters for marker parameters. Parameters are separated by space. For space inside parameter use escape sequence (\ ) || Any next line not started with reserved name is regarding as sql continuing || Executes sql statement. Can contain position markers (?). In this case parameter values are taken from action parameter sequence. Any exception thrown fails the statement and the whole test ||
