@@ -265,3 +265,7 @@ Action and parameters are separated by space. If space is used inside condition 
 || isnull || Column name || No || Fails if the column contains not NULL value ||
 || isnotnull || Column name || No || Opposite to above. Fails if column contains NULL value ||
 || eof || No || No || End of rows fetched are expected here. The test fails if next row is fetched ||
+
+== Example ==
+[http://code.google.com/p/boatester/source/browse/#svn%2Ftrunk%2FTestBoaHarness%2Fsrc%2FTestResource%2Fresource common resource]
+[http://code.google.com/p/boatester/source/browse/#svn%2Ftrunk%2FTestBoaHarness%2Fsrc%2FTestResource%2Ftest7%253Fstate%253Dclosed test specific files]
