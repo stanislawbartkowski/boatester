@@ -125,7 +125,7 @@ sqlexceptionexpected(75000): CALL THROWSIGNAL(NULL);
 }}}
 This simple example covers all cases. The last test will fail because the exception is required here.
 *Warning* Unfortunately, ODBC call sequence format ( {CALL THROWSIGNAL(NULL); ) does not pass sql error codes. So if sql error detection matters one should use vendor specific stored procedure calling clause.
-== UDF User Defined Functions
+== UDF User Defined Functions ==
 The same problem related to OUT parameters for stored procedure address also testing UDF. There is no way to get and test the return value of the UDF but we can use staging table for passing the values.
 {{{
 [setup]
