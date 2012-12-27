@@ -184,6 +184,10 @@ iany.sql:ALTER TABLE PERSONID ALTER ID DEFAULT AUTOINCREMENT
 sql: INSERT INTO PERSONID VALUES(DEFAULT,'John Smith')
 }}}
 To use vendor specific syntax it is enough to comment and uncomment db2type property. *Important* The meaning of dbtype property is meaningless, it is used only as a prefix for sql test lines. It does not have any additional meaning attached.
+= Macro substitution =
+Sometimes the same string is used more than once. ODBCHelper provides a mechanism like "macro substitution"
+Example:
+Assume that name 'Peter' is reusable in many places.
 = More detailed description =
 == Prerequisites ==
  * [http://code.google.com/p/pyodbc/ pyodbc] 
