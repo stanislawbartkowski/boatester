@@ -271,7 +271,7 @@ def injectParam(param,tepar) :
 class TestSuite(unittest.TestCase):
 
     def setUp(self):
-       self.selenium = selenium("localhost", 4444, "*firefox", "http://hotelnajavie.appspot.com/")
+       self.selenium = selenium("localhost", 4444, "**firefox", "http://hotelnajavie.appspot.com/")
        self.selenium.start()
        self.seHelper = SeleniumHelper.SeleniumHelper(self.selenium)
        self.seHelper.setParam(self,Test6Case.param,Test6Case.tepar)
