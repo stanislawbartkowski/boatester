@@ -4,4 +4,15 @@ sql:DELETE FROM MESS
 verify: SELECT COUNT(*) AS C FROM MESS
 equal C 100
 
+[test1]
+sql: DELETE FROM MESS
+sql: INSERT INTO MESS VALUES('%(name)s')
+verify: SELECT M FROM MESS
+equal M Peter
+sql: DELETE FROM MESS
+sql: INSERT INTO MESS VALUES('%(thebest)s')
+verify: SELECT M FROM MESS
+equal M DB2\ is\ the\ best\ database
+
+
 

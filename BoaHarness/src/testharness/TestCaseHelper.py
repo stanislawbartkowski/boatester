@@ -186,8 +186,7 @@ def runBin(param, com, binarywaited):
     
     Args:
       line : line to be changed
-      param : TestParam 
-      teparam : OneTestParam
+      p : lamba function which return the value for parameter
       
     Returns:
       Fixed line
@@ -197,8 +196,7 @@ def runBin(param, com, binarywaited):
       
     """
 
-
-def replaceLine(line,  param,  teparam):
+def replaceLine(line,  p):
     while 1 :
         low = line.rfind("%(")
         if low == -1 : break
@@ -207,13 +205,30 @@ def replaceLine(line,  param,  teparam):
         before = line[0: low]
         after = line[up+2: len(line)]
         key = line[low+2: up]
-        value = teparam.getPar(key)
-        if value == None : value = param.getPar(key)
+        value = p(key)
         if value == None : 
             raise TestException(key + " variable for replacement not found !")
         line = before + value + after
         
-    return line                           
+    return line               
+
+def readListOfLinesWithReplace(fName,  p) :
+     """ Read list of lines from file with variable substitution
+     Args:
+       fName file name (must exists)
+       p lambda function which return value for variable
+     
+     Returns:
+      List of lines read
+     """
+     f = open(fName, "r")
+     list = f.readlines()
+     f.close()
+     lines = []
+     for l in list :
+         lines.append(replaceLine(l, p))
+     return lines        
+
 
 
 class TestException(Exception):
