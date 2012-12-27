@@ -65,7 +65,7 @@ class ConfigP :
          list = f.readlines()
          f.close()
          self.lines = []
-         p = lambda key : param.getPar(key) if param.getPar(key) != None else teparam.getPar(key)
+         p = lambda key : teparam.getPar(key) if teparam.getPar(key) != None else param.getPar(key)
  
          for l in list :
              self.lines.append(TestCaseHelper.replaceLine(l, p))
