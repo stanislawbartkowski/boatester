@@ -54,19 +54,21 @@ class ConfigP :
     """
 
     def __init__(self,fname, param, teparam):
-        """ Constructor for ConfigP file
+         """ Constructor for ConfigP file
 
-        Args:
+         Args:
           fname : configuration file name, full path
           param : TestParam container
           tepar : OneTestParam container
-        """
-        f = open(fname)
-        list = f.readlines()
-        f.close()
-        self.lines = []
-        for l in list :
-            self.lines.append(TestCaseHelper.replaceLine(l, param, teparam))
+         """
+         f = open(fname)
+         list = f.readlines()
+         f.close()
+         self.lines = []
+         p = lambda key : param.getPar(key) if param.getPar(key) != None else teparam.getPar(key)
+ 
+         for l in list :
+             self.lines.append(TestCaseHelper.replaceLine(l, p))
 
     """ Returns sequence of selenium action to execute
 

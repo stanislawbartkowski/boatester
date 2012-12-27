@@ -25,4 +25,5 @@ class TestSuite(unittest.TestCase):
          for i in range(100) :
              self.odbcH.execute("INSERT INTO MESS VALUES(?)",  'MESS ' + str(i))
          self.odbcH.executeSection("check")
+         self.odbcH.executeSection("test1")
         

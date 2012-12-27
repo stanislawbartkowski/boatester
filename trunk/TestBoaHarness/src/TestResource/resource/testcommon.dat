@@ -1,3 +1,4 @@
 [defaults]
 odbcconnection=DSN=TSAMPLE;UID=db2inst2;PWD=db2inst2
 sqlfile=sqlfile.test
+dbtype=db2

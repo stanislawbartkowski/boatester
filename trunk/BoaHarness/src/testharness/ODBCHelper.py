@@ -62,18 +62,16 @@ _ENDA = ')'
 class SQLFileHelper() : 
      """ Class for keeping sqlfile (global and local)
      """ 
-     def __init__(self, fName):
+     def __init__(self, fName, he):
          """ Constructor
          
          Args: 
            fName  full path name of sql file
+           he ODBCHelper
          """
          self.__fName = fName
-         TestBoa.exist(fName)
-         logging.debug("Starting reading file " + fName)
-         f = open(fName, "r")
-         self.lines = f.readlines()
-         f.close()
+         p = lambda key : he.getPar(key)
+         self.lines = TestCaseHelper.readListOfLinesWithReplace(fName, p)
          
      def getSection(self, secname):
          """ Get lines from sqlfile for for given section name
@@ -211,12 +209,13 @@ class ODBCHelper() :
          resDir = self.param.getGlobResDir()
          mainfile = os.path.join(resDir, self.sqlfile)
          if os.path.exists(mainfile):
-             self.mainSQL = SQLFileHelper(mainfile)
+             # risky stuff - to pass self in constructor
+             self.mainSQL = SQLFileHelper(mainfile, self)
          id = self.teparam.getTestId()
          teDir = self.param.getTestDir(id)
          testfile = os.path.join(teDir, self.sqlfile)
          if os.path.exists(testfile):
-             self.teSQL = SQLFileHelper(testfile)
+             self.teSQL = SQLFileHelper(testfile, self)
     
      def close(self):
          """ Close connection
