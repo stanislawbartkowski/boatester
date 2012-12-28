@@ -14,16 +14,19 @@ def injectParam(param,tepar) :
     
 class TestSuite(unittest.TestCase):
 
-    def setUp(self):
+     def setUp(self):
          self.param = Test8Case.param
          self.teparam = Test8Case.teparam
          self.odbcH = ODBCHelper.ODBCHelper(self, self.param, self.teparam)
         
-
-    def testCase(self):
-         self.odbcH.executeSection()
-         for i in range(100) :
-             self.odbcH.execute("INSERT INTO MESS VALUES(?)",  'MESS ' + str(i))
-         self.odbcH.executeSection("check")
-         self.odbcH.executeSection("test1")
-        
+     def tearDown(self):
+         self.odbcH.close()
+         
+     def testCase(self):
+   #      self.odbcH.executeSection()
+  #       for i in range(100) :
+ #            self.odbcH.execute("INSERT INTO MESS VALUES(?)",  'MESS ' + str(i))
+#         self.odbcH.executeSection("check")
+ #        self.odbcH.executeSection("test1")
+         self.odbcH.executeSection("test2")
+         
