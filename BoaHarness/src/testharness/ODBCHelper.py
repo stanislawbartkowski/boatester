@@ -27,6 +27,7 @@ import TestBoa
 import os
 import re
 import datetime
+import decimal
 
 _CONNECTIONPARAM = 'odbcconnection'
 _DBTYPE='dbtype'
@@ -336,11 +337,18 @@ class ODBCHelper() :
                  val = None
                  rowval = row[i]
                  ty = coldescr[1]
-                 if ty is datetime.datetime and rowval != None :
-                     # unfortunately for NULL date column it pyodbc does not return None but meaningless data
-                    if rowval.month > 12 or rowval.year > 20000 or rowval.day > 31: rowval = None
                  if s != None :
-                     if ty is datetime.datetime :
+                     if ty is decimal.Decimal :
+                         # it looks like an error in pyodbc
+                         # rowval keeps value without decimal point
+                         # so correct it to be valid
+                         # precision for decimals
+                         prec = coldescr[5]
+                         tens =  decimal.Context().power(10, prec)
+                         val = coldescr[1](s)
+                         # correct rowval by precision
+                         rowval = rowval / tens
+                     elif ty is datetime.datetime :
                          # in case of date convert to datetime object
                          val = datetime.datetime.strptime(s, _DATEFORMAT)
                      else : val = coldescr[1](s)

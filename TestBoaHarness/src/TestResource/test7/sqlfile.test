@@ -9,6 +9,11 @@ calltest: test5
 calltest: test6
 calltest: test7
 calltest: test8
+calltest: test9
+
+[x-default]
+calltest: setup
+calltest: test9
 
 [main]
 sql:DELETE FROM MESS
@@ -139,5 +144,9 @@ verify: SELECT * FROM MESS ORDER BY M
 equal M A1234567
 equal M B1234567
 eof
-
+[test9]
+sql: DELETE FROM DECI
+sql: INSERT INTO DECI VALUES(1)
+verify: SELECT * FROM DECI
+equal D 1
 
