@@ -1,13 +1,14 @@
 [default]
 calltest: setup
---calltest: main
---calltest: test1
---calltest: test2
---calltest: test3
---calltest: test4
---calltest: test5
---calltest: test6
+calltest: main
+calltest: test1
+calltest: test2
+calltest: test3
+calltest: test4
+calltest: test5
+calltest: test6
 calltest: test7
+calltest: test8
 
 [main]
 sql:DELETE FROM MESS
@@ -130,4 +131,13 @@ verify: SELECT * FROM MESS ORDER BY M
 equal M new\ message
 equal M next\ message
 eof
+[test8]
+sql: DELETE FROM MESS
+sql: { CALL LOGMESS('A1234567') }
+sql: CALL LOGMESS('B1234567') 
+verify: SELECT * FROM MESS ORDER BY M
+equal M A1234567
+equal M B1234567
+eof
+
 
