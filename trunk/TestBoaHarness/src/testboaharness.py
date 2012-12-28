@@ -6,8 +6,8 @@ import logging
 
 #LOG_FILENAME = '/tmp/testlogging.out'
 #logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG)
-logging.basicConfig(level=logging.DEBUG)
-#logging.basicConfig(level=logging.INFO)
+#logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 
 def printhelp():

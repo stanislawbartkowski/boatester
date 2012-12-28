@@ -20,4 +20,5 @@ sql: DELETE FROM TTT
 sql: INSERT INTO TTT VALUES(1,NULL)
 verify: SELECT * FROM TTT
 equal NUM1 1 , isnull NUM2
+--equal NUM1 10 , isnull NUM2
 
