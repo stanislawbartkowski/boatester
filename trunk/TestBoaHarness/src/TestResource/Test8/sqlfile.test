@@ -14,5 +14,10 @@ sql: INSERT INTO MESS VALUES('%(thebest)s')
 verify: SELECT M FROM MESS
 equal M DB2\ is\ the\ best\ database
 
-
+[test2]
+sqlexception: CREATE TABLE TTT (NUM1 BIGINT, NUM2 BIGINT)
+sql: DELETE FROM TTT
+sql: INSERT INTO TTT VALUES(1,NULL)
+verify: SELECT * FROM TTT
+equal NUM1 1 , isnull NUM2
 
