@@ -10,10 +10,13 @@ calltest: test6
 calltest: test7
 calltest: test8
 calltest: test9
+calltest: test10
+calltest: test11
+calltest: test12
 
 [x-default]
 calltest: setup
-calltest: test9
+calltest: test12
 
 [main]
 sql:DELETE FROM MESS
@@ -150,3 +153,15 @@ sql: INSERT INTO DECI VALUES(1)
 verify: SELECT * FROM DECI
 equal D 1
 
+[test10]
+sql: DELETE FROM DECI
+sql: INSERT INTO DECI VALUES(NULL)
+verify: SELECT * FROM DECI
+isnull D
+
+[test11]
+sql: SELECT * FROM DECI
+
+[test12]
+verify: SELECT * FROM DECI
+calltest: test11

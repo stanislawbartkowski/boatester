@@ -314,6 +314,9 @@ class ODBCHelper() :
              if inde == 0 : 
                  # return without additional value
                  val = s[len(to):].strip()
+                 if i == 3 or i == 6 :
+                     if val == "" :
+                         raise TestCaseHelper.TestException("Empty content " + s)
                  return (i, val, None)
          # not recognized
          return (-1, None, None)
@@ -347,7 +350,8 @@ class ODBCHelper() :
                          tens =  decimal.Context().power(10, prec)
                          val = coldescr[1](s)
                          # correct rowval by precision
-                         rowval = rowval / tens
+                         if rowval != None :
+                             rowval = rowval / tens
                      elif ty is datetime.datetime :
                          # in case of date convert to datetime object
                          val = datetime.datetime.strptime(s, _DATEFORMAT)
@@ -465,6 +469,8 @@ class ODBCHelper() :
                  continue
              if not verify :    
                  # multilined sql statement, add next part
+                 if self.__actsql == None :
+                     raise TestCaseHelper.TestException("Not expected here:" + l)
                  self.__actsql.append(l)
              else :
                  # validation line
