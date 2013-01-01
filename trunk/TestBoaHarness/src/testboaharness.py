@@ -1,5 +1,8 @@
+#import sys
+#sys.path.append('/home/sbartkowski/boatester/BoaHarness/src/testharness')
 import sys
-sys.path.append('/home/sbartkowski/boatester/BoaHarness/src/testharness')
+print sys.path
+import TestBoa
 from TestBoa import *
 from TestCaseHelper import *
 import logging
@@ -54,7 +57,7 @@ if __name__ == "__main__":
     rundir = sys.argv[2]
     testspec = sys.argv[3]
     testid = sys.argv[4]
-    globresource = resource+'/resource'
+    globresource = resource + "/resource"
     propfile = globresource + "/testcommon.dat"
     factory = TestCaseFactory()
     factory.register(MyFactory())

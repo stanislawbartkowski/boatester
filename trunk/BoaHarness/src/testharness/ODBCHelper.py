@@ -179,7 +179,7 @@ class ODBCHelper() :
        self.cursor Cursor object (set after self.execute)
      """
     
-     def __init__(self,  testcase, param, teparam) :
+     def __init__(self,  testcase, param, teparam, dsnstring=None) :
          """ Constructor
          Args:
            testcase unittest.TestCase
@@ -195,7 +195,8 @@ class ODBCHelper() :
              raise TestCaseHelper.TestException(_SQLFILE  + ' sql command file not defined')
          if self.dbtype != None :
              logging.debug(_DBTYPE + " = " + self.dbtype) 
-         odbc = self.getPar(_CONNECTIONPARAM )
+         if dsnstring == None : odbc = self.getPar(_CONNECTIONPARAM )
+         else: odbc = dsnstring
          if odbc == None :
              raise TestCaseHelper.TestException(_CONNECTIONPARAM  + ' ODBC connection string not defined')
           
