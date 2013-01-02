@@ -22,3 +22,11 @@ verify: SELECT * FROM TTT
 equal NUM1 1 , isnull NUM2
 --equal NUM1 10 , isnull NUM2
 
+sqlexception: DROP TABLE TCHA
+sql: CREATE TABLE TCHA (NAME CHAR(10))
+sql: INSERT INTO TCHA VALUES('John')
+commit:
+print: Check now !!
+verify: SELECT * FROM TCHA
+equal NAME John\ \ \ \ \ \ 
+

@@ -259,7 +259,7 @@ class ODBCHelper() :
              # if not then without database name
          return te.getPar(s)
     
-     def getPar(self, s):
+     def getPar(self, s, mustBe=False):
          """ Parameter getter, firstly look in local then in global
          Args:
            s parameter name
@@ -272,7 +272,12 @@ class ODBCHelper() :
          # firstly in local OneTestParam
          if val != None : return val
          # if not found then reach out to global TestParam
-         return self.__getParam(s, self.param)
+         val = self.__getParam(s, self.param)
+         if val != None : return val
+         if mustBe :
+            raise TestCaseHelper.TestException(s  + ' parameter not defined')
+         return None 
+
                  
      def __runactsql(self):
          """ Execute statement cached in __actsql object
@@ -353,9 +358,14 @@ class ODBCHelper() :
                          # correct rowval by precision
                          if rowval != None :
                              rowval = rowval / tens
-                     elif ty is datetime.datetime :
+                     elif ty is datetime.datetime  :
                          # in case of date convert to datetime object
                          val = datetime.datetime.strptime(s, _DATEFORMAT)
+                     elif ty is datetime.date :
+                         # in case of date convert to datetime object
+                         dtime = datetime.datetime.strptime(s, _DATEFORMAT)
+                         # now convert datetime object to date object
+                         val = datetime.date(dtime.year, dtime.month, dtime.day)
                      else : val = coldescr[1](s)
                  return (rowval, val)
          raise TestCaseHelper.TestException(col + " not found in result set columns")
@@ -372,7 +382,7 @@ class ODBCHelper() :
          # only for comparators recognized now
          comparators=[_EQUAL, _EOF, _ISNULL, _ISNOTNULL]
          for v in split :
-             logging.debug(v)
+             logging.debug(v )
              vv = v.strip().replace(_ESCAPECOMA, ',')
              # split the veryfying string regarding escaped space (via regular expression)
              elemver = re.split(_SPLITWORDINVER, vv)
@@ -383,7 +393,13 @@ class ODBCHelper() :
              par2 = None
              # recognize additonal parameters
              if len(elemver) >= 2 : par1 = elemver[1].replace(_ESCAPESPACE, ' ')
-             if len(elemver) == 3 : par2 = elemver[2].replace(_ESCAPESPACE, ' ')
+             if len(elemver) == 3 : 
+                 par2 = elemver[2].replace(_ESCAPESPACE, ' ')
+                 # little tricky problem, last \ is replaced with  (space)
+                 # it is to handle situaion when last character in the line is: \  (\ space)
+                 lastS = par2.rfind('\\')
+                 if lastS != -1 and lastS+1 == len(par2) :
+                     par2 = par2[0:lastS] + ' '
              # recognize comparator
              action = None
              for i in range(len(comparators)) :
