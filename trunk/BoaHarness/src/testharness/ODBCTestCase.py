@@ -24,8 +24,6 @@ import os
 import sys
 import unittest
 
-import ODBCHelper
-
 _ODBCTEST='odbcrun'
     
     
