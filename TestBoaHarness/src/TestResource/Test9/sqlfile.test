@@ -1,0 +1,9 @@
+[default]
+sqlexception: DROP TABLE NAME_TEST
+sql: CREATE TABLE NAME_TEST (DT DATE)
+sql: INSERT INTO NAME_TEST VALUES('2012-07-08')
+commit:
+verify: SELECT COUNT(*) AS C FROM NAME_TEST
+equal C 1
+verify: SELECT * FROM NAME_TEST
+equal DT 2012-07-08

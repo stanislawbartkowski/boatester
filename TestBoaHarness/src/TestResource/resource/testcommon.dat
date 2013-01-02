@@ -1,4 +1,6 @@
 [defaults]
-odbcconnection=DSN=TSAMPLE;UID=db2inst2;PWD=db2inst2
+#dbtype=db2
+dbtype=psql
+db2.odbcconnection=DSN=TSAMPLE;UID=db2inst2;PWD=db2inst2
+psql.odbcconnection=DSN=psqlODBC;UID=sb
 sqlfile=sqlfile.test
-dbtype=db2

@@ -1,5 +1,3 @@
-#import sys
-#sys.path.append('/home/sbartkowski/boatester/BoaHarness/src/testharness')
 import sys
 print sys.path
 import TestBoa
