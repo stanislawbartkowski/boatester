@@ -186,9 +186,7 @@ def _resReport(res):
             tes = te[0:2]
             ca = tes[0]
             descr = tes[1]
-#            print descr
-# remove descr : it blures the output
-# little tricky thing : assuming that test case has a teparam attribute of type OneTestParam
+            print descr
             print "    ", ca.teparam.getTestId()
 
 def _readListParam(desc, suiteParam ):

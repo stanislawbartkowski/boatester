@@ -240,6 +240,10 @@ class ODBCHelper() :
          logging.debug(s )        
          if param == None : self.cursor = self.cnxn.execute(s)
          else : self.cursor = self.cnxn.execute(s, param)
+         
+     def commit(self) :
+         self.cnxn.commit()
+
     
      def __getParam(self, s, te):
          """ Parameter getter
@@ -465,7 +469,7 @@ class ODBCHelper() :
                  # commit
                  self.__runactsql()
                  logging.debug("commit")
-                 self.cnxn.commit()
+                 self.commit()
                  continue
              if op == 3 :
                  # verify,, next lines contains validation data
