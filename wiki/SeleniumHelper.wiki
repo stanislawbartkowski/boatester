@@ -364,10 +364,11 @@ Run 'registerAction' method of 'SeleniumHelper.SeleniumHelper' class
 {{{
   he.registerAction('type',seleniumType(),2)
 }}}
-== Hints and tips ==
+= Hints and tips =
 
-=== Wait at the beginning ==
+== Wait at the beginning ==
 You have to wait until dialog or windows is opened. It is difficult to tell how much time it needs.
+
 Probably will not work:
 {{{
 [alias]
@@ -389,7 +390,7 @@ sleep:1
 type:#GLOBINT|987
 verEqual:#GLOBINT|987
 }}}
-=== Check boxes ===
+== Check boxes ==
 Change check boxes by clicking
 {{{
 [alias]
