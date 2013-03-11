@@ -33,6 +33,12 @@ import ODBCTestCase
 
 _TEST = "test"
 
+_HOST='host'
+_PORT='port'
+_BROWSER='browser'
+_HTTP='http'
+_START='start'
+
 def exist(fname):
     """ Check if directory exists (as expected)
     
@@ -317,6 +323,48 @@ class CommandUnitTestFactory:
         if command == None: return None
         return [CommandTestCase(param, par)]
 
+class SeleniumTestCase(unittest.TestCase):
+
+     def __init__(self, param, teparam):
+         unittest.TestCase.__init__(self, 'runTest')
+         self.param = param
+         self.teparam = teparam
+
+     def __getP(self, key, default=None) :
+         return TestCaseHelper.getParam(self.param, self.teparam, key, default)
+         
+     def setUp(self):
+         from selenium import selenium
+         import SeleniumHelper
+         host = self.__getP(_HOST)
+         port = int(self.__getP(_PORT))
+         browser = self.__getP(_BROWSER)
+         http = self.__getP(_HTTP)
+         self.selenium = selenium(host, port, browser, http)
+         self.selenium.start()
+         self.seHelper = SeleniumHelper.SeleniumHelper(self.selenium)
+         self.seHelper.setParam(self,self.param,self.teparam)
+         self.ok = False
+
+     def runTest(self):
+         self.selenium.open("")
+         self.seHelper.runTest(self.__getP(_START,'start'))
+         self.ok = True
+    
+     def tearDown(self) :
+         if self.ok :
+             self.selenium.close()
+             self.selenium.stop()
+
+class SeleniumTestFactory:
+
+    def constructTestCase(self, param, tepar):
+         selFile = tepar.getPar('selfile')
+         if selFile == None : return None
+         teca = SeleniumTestCase(param, tepar)
+         return [teca]
+
+
 class TestCaseFactory:
 
     """ Container for test case factories
@@ -334,6 +382,7 @@ class TestCaseFactory:
         self.register(PythonUnitTestFactory())
         self.register(CommandUnitTestFactory())
         self.register(ODBCTestCase.ODBCUnitTestFactory())
+        self.register(SeleniumTestFactory())
 
     def register(self, fa):
         """ Register next factory
@@ -393,6 +442,8 @@ class RunSuiteParam:
           look above
         """
         self.factory = factory
+        if factory == None :
+            self.factory = TestCaseFactory()
         self.customC = customC
         self.testprop = testprop
         self.globresdir = globresdir

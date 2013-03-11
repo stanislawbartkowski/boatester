@@ -29,12 +29,32 @@ import time
 import unittest
 
 def _getKey(cf, key):
-    if cf == None : return None
-    ikey = osPrefix() + "." + key
-    if cf.has_key(ikey): return cf[ikey]
-    if cf.has_key(key): return cf[key]
-    return None
+     if cf == None : return None
+     ikey = osPrefix() + "." + key
+     if cf.has_key(ikey): return cf[ikey]
+     if cf.has_key(key): return cf[key]
+     return None
 
+def getParam(param, teparam,key, default=None) :
+     """"Returns parameter from global and local properties file
+     Args:
+        param : global configuration file
+        teparam: local, test confoguration file
+        key : key value
+        default: if None then error is raised if parameter does not exist
+                      otherwise default parameter is returned
+     Returns:
+        Parameter value. Firstly local configuraiton is scanned then global if not found
+     """
+     
+     val = teparam.getPar(key)
+     if val : return val
+     val = param.getPar(key)
+     if val : return val
+     if default == None :
+         raise TestException(key + " parameter not found. Cannot continue.")
+     return default
+     
 def osPrefix():
     """Returns system prefix
 
@@ -261,7 +281,7 @@ class TestException(Exception):
         """
         print self.s
 
-    def __str__(str) :
+    def __str__(self) :
         return self.s
 
 
