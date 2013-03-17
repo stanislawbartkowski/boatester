@@ -190,6 +190,9 @@ http://seleniumhq.org/docs/04_selenese_commands.html#locating-elements
 ||verEqual||Verification, compares contents of element with text given, failures test if not equal||Element selector||Text to be compared with (warning: trailing spaces are significant||
 ||isPresent||Verifies if element is on the screen, failures test otherwise||Element selector||
 ||mouseOver||Positions mouse on the element||Element selector||
+||call||Call another piece of test. This way some tests can be reusable || The name of test to call. ||
+||waitForNot||Opposite to waitFor. Waits until the element on the screen disappears || Number of seconds (default: 5) ||
+||select||Selecting in 'select' tag. For some reason 'click' does not work||Selector for 'select' tag||Value to be selected||
 
 =How to use=
 
@@ -228,6 +231,29 @@ Selenium server should be started manually outside BoaTester.
 
 ===Declaration===
 
+There are two ways to run selenium base test: automatically and using 'python' starter
+
+===Run selenium test case automatically===
+This test is launched if in the 'test.properties' file 'selFile' property is present and 'testcase' property is absent. But in order to initialize 'selenium' object additional properties should be defined (parameters for constructor http://selenium.googlecode.com/svn/trunk/docs/api/py/selenium/selenium.selenium.html).
+|| Property || Value ||
+|| host || 'host' constructor parameter ||
+|| port || integer, 'port' constructor parameter ||
+|| browser || 'browserStartCommand' ||
+|| http || 'browserURL' ||
+
+Example (pay attention to the lack of 'testcase' property)
+{{{
+[defaults]
+selfile=selenium.file
+host=localhost
+port=4444
+browser=*firefox
+http=http://localhost:8080/TomcatJPAApplication/
+}}}
+
+Important: 'host','port',browser' and 'http' can be places in common 'test.properties' file. This way it can be shared between all test cases.
+
+=== Use 'python' test case activator===
 [http://code.google.com/p/boatester/source/browse/trunk/TestBoaHarness/src/TestResource/Test6/]
 
 It is a definition of python test case.
