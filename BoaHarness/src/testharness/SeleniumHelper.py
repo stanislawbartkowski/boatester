@@ -20,6 +20,8 @@ __authors__ = [
     '"Stanislaw Bartkowski" <stanislawbartkowski@gmail.com>',
 ]
 
+_SELFILE='selfile'
+
 import logging
 import TestCaseHelper
 import TestBoa
@@ -207,38 +209,40 @@ class seleniumTypeContext :
         """
         pass
 
-    def setParam(self,cparam,se,tcase,param,teparam) :
-        """ Set context param. Called by test runner
+    def setParam(self,cparam,helper) :
+         """ Set context param. Called by test runner
         
          Args:
+           helper : ConfigFileHelper reference
            cparam :  ConfigFileHelper refrence
-           se : Selenium class
-           tcase : unittest.TestCase class containing this test
-           param : TestParam container
-           tepar : OneTestParam container
+             helper.se : Selenium class
+             helper.tcase : unittest.TestCase class containing this test
+             helper.param : TestParam container
+             helper.tepar : OneTestParam container
+             co : ConfigFileHelper container
         
-        """
-        if cparam != None :
-            logging.debug(self.key + " " + str(cparam))
-        else :
-            logging.debug(self.key)
-        self.cparam = cparam
-        if cparam == None or len(cparam) < self.nof :
-            # check default vales
-            dlen = 0
-            if self.defa != None : dlen = len(self.defa)
-            if len(cparam) + dlen < self.nof :        
-              raise TestCaseHelper.TestException(self.key + " requires " + str(self.nof) + " parameters! Actual number : " +  str(cparam))
-            # default values  
-            for pa in self.defa :
-              self.cparam.append(pa)  
+         """
+         self.se = helper.se
+         self.tcase = helper.tcase
+         self.param = helper.param
+         self.teparam = helper.teparam
+         self.helper = helper
+
+         if cparam != None :
+             logging.debug(self.key + " " + str(cparam))
+         else :
+             logging.debug(self.key)
+         self.cparam = cparam
+         if cparam == None or len(cparam) < self.nof :
+             # check default vales
+             dlen = 0
+             if self.defa != None : dlen = len(self.defa)
+             if len(cparam) + dlen < self.nof :        
+                 raise TestCaseHelper.TestException(self.key + " requires " + str(self.nof) + " parameters! Actual number : " +  str(cparam))
+             # default values  
+             for pa in self.defa :
+                 self.cparam.append(pa)  
               
-           
-        self.se = se
-        self.tcase = tcase
-        self.param = param
-        self.teparam = teparam
-        
     def getParam(self):
         """ Getter for params
         
@@ -259,60 +263,73 @@ class seleniumTypeContext :
         self.nof = nof
         self.defa = defa
 
-def waitForElement(tcase,sel,ele,sec=5) :
-    """ Waits for element on the screen
+def waitForElement(tcase,sel,ele,exist, sec=5) :
+     """ Waits for element on the screen
     
-    Args:
+     Args:
        tcase : Unittest class
        sel : Selenium type
        ele : element to wait for
+       exist: True: wait for existence, False : wait for lack of element
        sec : maximum number of second to wait for
        
      Raise:
        fails test case if time expires
        
-    """
-    for i in range(1,sec) :
-        if sel.is_element_present(ele) : return
-        time.sleep(1)
-    tcase.fail(ele + " cannot find that element !")
+     """
+     for i in range(1,sec) :
+         if exist and sel.is_element_present(ele) : return
+         if  not exist and not sel.is_element_present(ele) : return
+         time.sleep(1)
+     tcase.fail(ele + " cannot find that element !")
         
 
 class seleniumType(seleniumTypeContext) :
-    """ Action class for 'type' action 
-    First parameter - element selector
-    Second parameter - string to be typed in
-    """
-    def do(self):
-        self.se.type(self.cparam[0], self.cparam[1])
+     """ Action class for 'type' action 
+     First parameter - element selector
+     Second parameter - string to be typed in
+     """
+     def do(self):
+         self.se.type(self.cparam[0], self.cparam[1])
         
 class seleniumKeyDown(seleniumTypeContext) :
-    """ Action class for 'type' action 
-    First parameter - element selector
-    Second parameter - string to be typed in
-    """
-    def do(self):
-        self.se.key_press(self.cparam[0], self.cparam[1])
+     """ Action class for 'type' action 
+     First parameter - element selector
+     Second parameter - string to be typed in
+     """
+     def do(self):
+         self.se.key_press(self.cparam[0], self.cparam[1])
         
 class seleniumFocus(seleniumTypeContext) :
-    """ Action class for 'click' action
-    First parameter: element selector to be clicked
-    """
+     """ Action class for 'focus' action
+     First parameter: element selector to be focused on
+     """
 
-    def do(self):
-        id = self.cparam[0]
-        self.se.focus(id)
+     def do(self):
+         id = self.cparam[0]
+         self.se.focus(id)
 
 
 class seleniumClick(seleniumTypeContext) :
-    """ Action class for 'click' action
-    First parameter: element selector to be clicked
-    """
+     """ Action class for 'click' action
+     First parameter: element selector to be clicked
+     """
 
-    def do(self):
-        id = self.cparam[0]
-        self.se.click(id)
+     def do(self):
+         id = self.cparam[0]
+         self.se.click(id)
+
+class seleniumSelect(seleniumTypeContext) :
+     """ Action class for 'click' action
+     First parameter: element selector to be clicked
+     """
+
+     def do(self):
+         id = self.cparam[0]
+         option = self.cparam[1]
+         self.se.select(id, option)
         
+
 class seleniumWait(seleniumTypeContext) :
     """ Action class for 'sleep' action
     First parameter: number of seconds to slepp
@@ -331,13 +348,22 @@ class seleniumDebug(seleniumTypeContext) :
         pass
         
 class seleniumWaitFor(seleniumTypeContext) :
-    """ Action class for 'waitFor' action
-    First parameter: element selector to be waited
-    """
+     """ Action class for 'waitFor' action
+     First parameter: element selector to be waited
+     """
 
-    def do(self):
-        sec = int(self.cparam[1])
-        waitForElement(self.tcase,self.se,self.cparam[0], sec)
+     def do(self):
+         sec = int(self.cparam[1])
+         waitForElement(self.tcase,self.se,self.cparam[0], True, sec)
+
+class seleniumWaitForNot(seleniumTypeContext) :
+     """ Action class for 'waitFor' action
+     First parameter: element selector to be waited
+     """
+
+     def do(self):
+         sec = int(self.cparam[1])
+         waitForElement(self.tcase,self.se,self.cparam[0], False, sec)
         
 class selectCombo(seleniumTypeContext) :
     """ Action class for 'selectCombo' action
@@ -350,119 +376,132 @@ class selectCombo(seleniumTypeContext) :
         self.se.select(locator, 'value=' + label)
         
 class seleniumMouseOver(seleniumTypeContext) :
-    """ Action class for 'mouseOver' action
-    First parameter: element selector for which 'mouseOver' action is performed
-    """
+     """ Action class for 'mouseOver' action
+     First parameter: element selector for which 'mouseOver' action is performed
+     """
 
-    def do(self):
-        self.se.mouse_over(self.cparam[0]);        
+     def do(self):
+         self.se.mouse_over(self.cparam[0]);        
         
-# sel.mouse_over(self.PASSWORD)
 
 class seleniumIsPresent(seleniumTypeContext) :
-    """ Action class for 'isPresent' action
-    First parameter: element selector to be searched
-    """
+     """ Action class for 'isPresent' action
+     First parameter: element selector to be searched
+     """
 
-    def do(self):
-        ele = self.cparam[0]
-        ispresent= self.se.is_element_present(ele)
-        self.tcase.assertTrue(ispresent, ele + " not present")
+     def do(self):
+         ele = self.cparam[0]
+         ispresent= self.se.is_element_present(ele)
+         self.tcase.assertTrue(ispresent, ele + " not present")
 
 class seleniumVerEqual(seleniumTypeContext) :
-    """ Action class for 'verEqual' verification action
-    First parameter: element selector
-    Second parameter: string to be verified 
-    """
+     """ Action class for 'verEqual' verification action
+     First parameter: element selector
+     Second parameter: string to be verified 
+     """
+     def do(self):
+         id = self.cparam[0]
+         vermess = self.cparam[1]
+         mess = self.se.get_value(id)
+         self.tcase.assertEqual(vermess, mess)
 
-    def do(self):
-        id = self.cparam[0]
-        vermess = self.cparam[1]
-        mess = self.se.get_value(id)
-        self.tcase.assertEqual(vermess, mess)
+class callAction(seleniumTypeContext) :
+     """ Action class for calling a sequence of selenium commands
+     First parameter: action name
+     """
+
+     def do(self):
+         name = self.cparam[0]
+         self.helper.runAction(name)
 
 class SeleniumHelper :
-    """ Helper supporting selenium action
-    """
+     """ Helper supporting selenium action
+     """
 
-    def __init__(self,se):
-        """ Constructor
+     def __init__(self,se):
+         """ Constructor
         
-        Args:
+         Args:
           se - Selenium class
-        """
-        self.se = se
-        self.a = {}
-        self.registerAction('type',seleniumType(),2)
-        self.registerAction('click',seleniumClick())
-        self.registerAction('sleep',seleniumWait())
-        self.registerAction('waitFor',seleniumWaitFor(),2,  [5])
-        self.registerAction('debug',seleniumDebug(),0)
-        self.registerAction('verEqual',seleniumVerEqual(),2)
-        self.registerAction('isPresent',seleniumIsPresent())
-        self.registerAction('mouseOver',seleniumMouseOver())
-        self.registerAction('selectCombo',selectCombo(), 2)
-        self.registerAction('keyDown',seleniumKeyDown(), 2)
-        self.registerAction('focus',seleniumFocus(), 1)
+         """
+         self.se = se
+         self.a = {}
+         self.registerAction('type',seleniumType(),2)
+         self.registerAction('click',seleniumClick())
+         self.registerAction('sleep',seleniumWait())
+         self.registerAction('waitFor',seleniumWaitFor(),2,  [5])
+         self.registerAction('debug',seleniumDebug(),0)
+         self.registerAction('verEqual',seleniumVerEqual(),2)
+         self.registerAction('isPresent',seleniumIsPresent())
+         self.registerAction('mouseOver',seleniumMouseOver())
+         self.registerAction('selectCombo',selectCombo(), 2)
+         self.registerAction('keyDown',seleniumKeyDown(), 2)
+         self.registerAction('focus',seleniumFocus())
+         self.registerAction('call', callAction())
+         self.registerAction('waitForNot', seleniumWaitForNot(),2,  [5])
+         self.registerAction('select',seleniumSelect(), 2)
+
+     def registerAction(self,key,o,nofParam = 1, defa=None):
+         """ Register custom action handler
+        
+         Args:
+           key : action name
+           o : action handler (extends SeleniumTypeContext)
+           nofParam : number of parameters expected
+         """
+         logging.debug('Register action ' + key + ' num of params:' + str(nofParam))
+         o.setInfo(key,nofParam, defa)
+         self.a[key] = o
         
 
-    def registerAction(self,key,o,nofParam = 1, defa=None):
-        """ Register custom action handler
+     def setParam(self,tcase,param,teparam):
+         """ Sets param
         
-        Args:
-          key : action name
-          o : action handler (extends SeleniumTypeContext)
-          nofParam : number of parameters expected
-        """
-        logging.debug('Register action ' + key + ' num of params:' + str(nofParam))
-        o.setInfo(key,nofParam, defa)
-        self.a[key] = o
-        
-
-    def setParam(self,tcase,param,teparam):
-        """ Sets param
-        
-        Args:
+         Args:
           tcase : unittest.TestCase
           param : TestParam container
           tepar : OneTestParam container
-        """
-        self.tcase = tcase
-        self.param = param
-        self.teparam = teparam
+         """
+         self.tcase = tcase
+         self.param = param
+         self.teparam = teparam
         
-    def getParam(self):    
-        """ Getter
-        Returns:
+     def getParam(self):    
+         """ Getter
+         Returns:
           Look setParam
-        """
-        return (self.tcase, self.param, self.teparam)
+         """
+         return (self.tcase, self.param, self.teparam)
 
-    def runTest(self,name):
-        """ Runs test 'name'
+     def runAction(self, name):
+         seq = self.co.getSequence(name)
+         for step in seq :
+             key = step[0]
+             param = step[1]
+             action = self.a[key]
+             action.setParam(param,self)
+             action.do()
+
+
+     def runTest(self,name):
+         """ Runs test 'name'
         
-        Args:
+         Args:
           name : test name to be run
           
-        Raise:
+         Raise:
            Fails test in case of error
-        """
-        mainfile = None
-        gName = self.param.getPar('selfile')
-        if gName != None :
-           resDir = self.param.getGlobResDir()
-           mainfile = os.path.join(resDir, gName)
-        testfile = None
-        tefile = self.teparam.getPar('selfile')
-        if tefile != None :
-            id = self.teparam.getTestId()
-            teDir = self.param.getTestDir(id)
-            testfile = os.path.join(teDir, tefile)
-        co = ConfigFileHelper(mainfile,testfile, self.param, self.teparam)
-        seq = co.getSequence(name)
-        for step in seq :
-            key = step[0]
-            param = step[1]
-            action = self.a[key]
-            action.setParam(param,self.se,self.tcase,self.param,self.teparam)
-            action.do()
+         """
+         mainfile = None
+         gName = self.param.getPar(_SELFILE)
+         if gName != None :
+             resDir = self.param.getGlobResDir()
+             mainfile = os.path.join(resDir, gName)
+         testfile = None
+         tefile = self.teparam.getPar(_SELFILE)
+         if tefile != None :
+             id = self.teparam.getTestId()
+             teDir = self.param.getTestDir(id)
+             testfile = os.path.join(teDir, tefile)
+         self.co = ConfigFileHelper(mainfile,testfile, self.param, self.teparam)
+         self.runAction(name)

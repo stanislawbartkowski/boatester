@@ -364,7 +364,6 @@ class SeleniumTestFactory:
          teca = SeleniumTestCase(param, tepar)
          return [teca]
 
-
 class TestCaseFactory:
 
     """ Container for test case factories
