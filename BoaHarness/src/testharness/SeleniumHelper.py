@@ -383,6 +383,13 @@ class seleniumMouseOver(seleniumTypeContext) :
      def do(self):
          self.se.mouse_over(self.cparam[0]);        
         
+class seleniumMouseDown(seleniumTypeContext) :
+     """ Action class for 'mouseDown' action
+     First parameter: element selector for which 'mouseDown' action is performed
+     """
+
+     def do(self):
+         self.se.mouse_down(self.cparam[0]);        
 
 class seleniumIsPresent(seleniumTypeContext) :
      """ Action class for 'isPresent' action
@@ -434,6 +441,7 @@ class SeleniumHelper :
          self.registerAction('verEqual',seleniumVerEqual(),2)
          self.registerAction('isPresent',seleniumIsPresent())
          self.registerAction('mouseOver',seleniumMouseOver())
+         self.registerAction('mouseDown',seleniumMouseDown())
          self.registerAction('selectCombo',selectCombo(), 2)
          self.registerAction('keyDown',seleniumKeyDown(), 2)
          self.registerAction('focus',seleniumFocus())

@@ -38,6 +38,7 @@ _PORT='port'
 _BROWSER='browser'
 _HTTP='http'
 _START='start'
+_QUERY="httpquery"
 
 def exist(fname):
     """ Check if directory exists (as expected)
@@ -347,7 +348,8 @@ class SeleniumTestCase(unittest.TestCase):
          self.ok = False
 
      def runTest(self):
-         self.selenium.open("")
+         query=self.__getP(_QUERY, "")
+         self.selenium.open(query)
          self.seHelper.runTest(self.__getP(_START,'start'))
          self.ok = True
     
