@@ -39,6 +39,7 @@ _BROWSER='browser'
 _HTTP='http'
 _START='start'
 _QUERY="httpquery"
+_BINARY="browserbinary"
 
 def exist(fname):
     """ Check if directory exists (as expected)
@@ -342,7 +343,11 @@ class SeleniumTestCase(unittest.TestCase):
          browser = self.__getP(_BROWSER)
          http = self.__getP(_HTTP)
          self.selenium = selenium(host, port, browser, http)
-         self.selenium.start()
+         binary = self.__getP(_BINARY,"")
+         browserOptions = None
+         if binary != "":
+            browserOptions=("executablePath=" + binary)
+         self.selenium.start(browserOptions)
          self.seHelper = SeleniumHelper.SeleniumHelper(self.selenium)
          self.seHelper.setParam(self,self.param,self.teparam)
          self.ok = False
