@@ -299,6 +299,7 @@ class seleniumKeyDown(seleniumTypeContext) :
      """
      def do(self):
          self.se.key_press(self.cparam[0], self.cparam[1])
+#         self.se.key_press(self.cparam[0], "\r\c")
         
 class seleniumFocus(seleniumTypeContext) :
      """ Action class for 'focus' action
@@ -391,6 +392,14 @@ class seleniumMouseDown(seleniumTypeContext) :
      def do(self):
          self.se.mouse_down(self.cparam[0]);        
 
+class seleniumFocus(seleniumTypeContext) :
+     """ Action class for 'focus' action
+     First parameter: element selector for which 'mouseDown' action is performed
+     """
+
+     def do(self):
+         self.se.focus(self.cparam[0]);        
+
 class seleniumIsPresent(seleniumTypeContext) :
      """ Action class for 'isPresent' action
      First parameter: element selector to be searched
@@ -448,6 +457,7 @@ class SeleniumHelper :
          self.registerAction('call', callAction())
          self.registerAction('waitForNot', seleniumWaitForNot(),2,  [5])
          self.registerAction('select',seleniumSelect(), 2)
+         self.registerAction('focus',seleniumFocus())
 
      def registerAction(self,key,o,nofParam = 1, defa=None):
          """ Register custom action handler
