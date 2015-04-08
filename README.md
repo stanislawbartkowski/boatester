@@ -5,4 +5,6 @@ Features:
  * Selenium test
  * SQL test
 
+[Blog](http://hoteljavaopensource.blogspot.com/)
+
 More information : [Wiki](https://github.com/stanislawbartkowski/boatester/wiki)
