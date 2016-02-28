@@ -4,6 +4,7 @@ Features:
  * Shell test case
  * Selenium test
  * SQL test
+ * Netezza PDA test
 
 [Blog](http://hoteljavaopensource.blogspot.com/)
 
