@@ -54,6 +54,11 @@ def getParam(param, teparam,key, default=None) :
      if default == None :
          raise TestException(key + " parameter not found. Cannot continue.")
      return default
+
+def getResourceDirPath(teparam,param,path) :
+      id = teparam.getTestId()
+      teDir = param.getTestDir(id)  
+      return os.path.join(teDir, path)
      
 def osPrefix():
     """Returns system prefix
@@ -105,7 +110,7 @@ def prepareRunCommand(command):
     if not isLinux(): return
     os.chmod(command, 0777)
 
-def _getTmpName():
+def getTmpName(tempdir=None):
     """Returns temporary and uniq file name
 
   Args:
@@ -117,7 +122,8 @@ def _getTmpName():
   Raises:
     Exception if error
     """
-    f = tempfile.mkstemp()
+    if tempdir == None: f = tempfile.mkstemp()
+    else: f = f = tempfile.mkstemp(dir=tempdir)
     tmp = f[1]
     os.close(f[0])
     return tmp
@@ -140,7 +146,7 @@ def __waitforBin(bin):
     if not isLinux() : return
     while True:
         time.sleep(1)
-        tmp = _getTmpName()
+        tmp = getTmpName()
         logging.debug("Wait for " + bin)
         logging.debug("Read ps output to temp " + tmp)
         os.system("ps -aef >" + tmp)
@@ -181,14 +187,14 @@ class ChangeDir :
         os.chdir(self.__dir)
         
 
-def runBin(param, com, binarywaited):
+def runBin(param, com, binarywaited=None):
     """Launch command and wait for exit
 
 
   Args:
     param: TestParam
     com: command to lauch
-    binarywaited: binary string visible in ps command
+    binarywaited: if not none then wait for binary string visible in ps command 
 
   Returns:
     Exit code
@@ -197,8 +203,10 @@ def runBin(param, com, binarywaited):
     Exception if any error has occured
     """
     d = ChangeDir(param)
-    res = os.system(com)
-    __waitforBin(binarywaited)
+    # os.system calls /bin/sh which does not recognized source command properly
+    res = os.system("/bin/bash " + com)
+    logging.debug(com)
+    if binarywaited != None : __waitforBin(binarywaited)
     d.restore()
     return res
 
@@ -507,6 +515,7 @@ def copyFile(param, teparam, file):
       Exception if error
 
     """
+    assert file != None
     soud = param.getTestDir(teparam.getTestId())
     soufile = os.path.join(soud, file)
     destd = param.getRunDir()
@@ -587,6 +596,31 @@ def prepareRunDir(param, teparam):
     __copyRes(param, None, teparam.getCopyCommonRes())
     __copyRes(param, teparam.getTestId(), teparam.getCopyTestRes())
 
+def compareFile(sou,dest) :
+    logging.info("Compare " + sou + " <==> " + dest)
+    f1 = open(sou, "r")
+    f2 = open(dest, "r")
+    li1 = f1.readlines()
+    li2 = f2.readlines()
+    if len(li1) != len(li2) :
+        logging.info(" number of lines is different")
+        return False
+    for i in range(0, len(li1))  :
+        line1 = li1[i].rstrip()
+        line2 = li2[i].rstrip()
+        if line1 != line2 : 
+            logging.info(" line number: " + str(i)  + " different")
+            logging.info(line1)
+            logging.info(line2)
+            return False
+	  
+# 2011/08/30 - filecmp.cmp replace by manual comparing to avoid trailing whitespaces
+#        eq = filecmp.cmp(sou, dest)
+#        if not eq:
+ #           logging.info("  different")
+ #           res = 0
+    return True
+
 def compareFiles(param, teparam, testdir, patt, destdir):
     """ Compare files in test case resource directory and test dir
 
@@ -604,46 +638,31 @@ def compareFiles(param, teparam, testdir, patt, destdir):
     Raise:
       Exception if any error
 
-    """
+    """    
     t = param.getTestDir(teparam.getTestId())
     xdir = os.path.join(t, testdir)
-    if not os.path.isdir(xdir): return 1
+    logging.debug("Comparing file, open directory " + xdir)
+    if not os.path.isdir(xdir): 
+      logging.debug("Empty directory, exiting")
+      return True
     li = os.listdir(xdir)
     tdir = param.getRunDir()
-    res = 1
+    res = True
     for l in li:
-        if l.find(patt) == -1: continue
+        logging.debug(l + " found")
+        if l.find(patt) == -1: 
+	   logging.debug("Not conform to pattter " + patt + ", ignored")
+	   continue
         sou = os.path.join(xdir, l)
         dest = os.path.join(tdir, destdir)
         dest = os.path.join(dest, l)
         logging.info(sou + " <=> " + dest)
         if not os.path.isfile(dest):
             logging.info ("  " + dest + " - does not exist")
-            res = 0
+            res = False
             continue
-        f1 = open(sou, "r")
-        f2 = open(dest, "r")
-        li1 = f1.readlines()
-        li2 = f2.readlines()
-        if len(li1) != len(li2) :
-            logging.info(" number of lines is different")
-            res = 0
-            continue
-        for i in range(0, len(li1))  :
-             line1 = li1[i].rstrip()
-             line2 = li2[i].rstrip()
-             if line1 != line2 : 
-                 logging.info(" line number: " + str(i)  + " different")
-                 logging.info(line1)
-                 logging.info(line2)
-                 res = 0
-                 break
-             
-# 2011/08/30 - filecmp.cmp replace by manual comparing to avoid trailing whitespaces
-#        eq = filecmp.cmp(sou, dest)
-#        if not eq:
- #           logging.info("  different")
- #           res = 0
+	if not compareFile(sou,dest) : res = False
+	
     return res
 
 class SampleTestCase(unittest.TestCase):
