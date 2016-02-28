@@ -1,0 +1,1 @@
+select username from _v_user where username = 'XX2' or username = 'XX1';

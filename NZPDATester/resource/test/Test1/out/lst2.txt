@@ -1,0 +1,6 @@
+ USERNAME 
+----------
+ XX1
+ XX2
+(2 rows)
+

@@ -1,0 +1,9 @@
+nzscript: setup.sql
+nzscript: verify.sql|lst1|verify
+runpathsh: %(mainscript)s||verify
+
+sql:SELECT username from _v_user|lst2
+     where username = 'XX2' or username = 'XX1'
+sql:
+
+verify:
