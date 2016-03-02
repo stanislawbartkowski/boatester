@@ -30,6 +30,7 @@ import unittest
 
 import TestCaseHelper
 import ODBCTestCase
+import NZPDATestCase
 
 _TEST = "test"
 
@@ -40,22 +41,6 @@ _HTTP='http'
 _START='start'
 _QUERY="httpquery"
 _BINARY="browserbinary"
-
-def exist(fname):
-    """ Check if directory exists (as expected)
-    
-    Args:
-      fname : directory, path name, to test
-      
-    Returns:
-      Nothing
-      
-    Raise:
-      TestException if directory not exist
-    """
-
-    if not os.path.exists(fname):
-        raise TestCaseHelper.TestException(fname + " file does not exists")
 
 def _getDir(param, s):
     """ Get directory local to common resource.
@@ -189,12 +174,14 @@ def _resReport(res):
     for t in res.failures:
         li.append(t)
     if not restest:
+        print "Number of tests failed :", len(li)
         print "LIST OF FAILED TESTS :"
+        fullinfo = len(li) == 1
         for te in li:
             tes = te[0:2]
             ca = tes[0]
             descr = tes[1]
-            print descr
+            if fullinfo : print descr
             print "    ", ca.teparam.getTestId()
 
 def _readListParam(desc, suiteParam ):
@@ -213,7 +200,7 @@ def _readListParam(desc, suiteParam ):
     """
     cf = ConfigParser.ConfigParser(suiteParam.createDict())
     logging.debug("Read property file " + desc)
-    exist(desc)
+    TestCaseHelper.exist(desc)
     cf.read(desc)
     list = cf.items("defaults")
     h = {}
@@ -389,6 +376,8 @@ class TestCaseFactory:
         self.register(CommandUnitTestFactory())
         self.register(ODBCTestCase.ODBCUnitTestFactory())
         self.register(SeleniumTestFactory())
+        self.register(NZPDATestCase.NZPDAFactory())
+
 
     def register(self, fa):
         """ Register next factory
@@ -459,6 +448,7 @@ class RunSuiteParam:
         
     def createDict(self) :
          dict = {}
+         for key in os.environ : dict[key] = os.environ[key]
          dict['globresdir'] = self.globresdir
          dict['resdir'] = self.resdir
          dict['rundir'] = self.rundir
@@ -503,3 +493,7 @@ def runSuite(suiteparam, testrun, testid):
 
     except TestCaseHelper.TestException, e:
         e.draw()
+
+def printhelp():
+    print "Usage:"
+    print "prog /res dir/ /run dir/ /spec/ /testid/"

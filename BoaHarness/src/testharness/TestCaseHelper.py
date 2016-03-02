@@ -28,6 +28,22 @@ import tempfile
 import time
 import unittest
 
+def exist(fname):
+    """ Check if directory exists (as expected)
+    
+    Args:
+      fname : directory, path name, to test
+      
+    Returns:
+      Nothing
+      
+    Raise:
+      TestException if directory not exist
+    """
+
+    if not os.path.exists(fname):
+        raise TestException(fname + " file does not exists")
+
 def _getKey(cf, key):
      if cf == None : return None
      ikey = osPrefix() + "." + key
@@ -51,6 +67,9 @@ def getParam(param, teparam,key, default=None) :
      if val : return val
      val = param.getPar(key)
      if val : return val
+     # check environment
+     if os.environ.has_key(key) :
+        return os.environ[key]
      if default == None :
          raise TestException(key + " parameter not found. Cannot continue.")
      return default
@@ -235,7 +254,7 @@ def replaceLine(line,  p):
         key = line[low+2: up]
         value = p(key)
         if value == None : 
-            raise TestException(key + " variable for replacement not found !")
+	    raise TestException(key + " variable for replacement not found !")
         line = before + value + after
         
     return line               
@@ -684,4 +703,3 @@ class SampleTestCase(unittest.TestCase):
 
     def runTest(self):
         print self.teparam.getDescr()
-

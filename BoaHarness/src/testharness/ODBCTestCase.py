@@ -25,9 +25,7 @@ import sys
 import unittest
 
 _ODBCTEST='odbcrun'
-    
-    
-
+        
 class ODBCTestCase(unittest.TestCase):
      """ Class for executing single odbc test  
      """

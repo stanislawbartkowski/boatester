@@ -22,12 +22,12 @@ __authors__ = [
 
 import sys
 
-from TestBoa import *
 from TestCaseHelper import *
 
 NZTEST="nztest.scen"
 
 NZSCRIPT="nzscript:"
+NZPATHSCRIPT="nzpathscript:"
 COMMENT="#"
 NZSQL='nzsql'
 OUT='out'
@@ -49,7 +49,7 @@ def _getParam(commandparam) :
     t = commandparam.split('|')
     out = None
     verify=False
-    script = t[0]
+    script = t[0].strip()
     addparam = None
     if len(t) >= 2 and t[1].strip() != "" : out = t[1].strip() + EXT;
     if len(t) >= 3 and t[2].strip() != "" :
@@ -102,6 +102,12 @@ class NZSQLScriptHelper :
         resDir = self.param.getGlobResDir()
         return os.path.join(resDir,nzsql)
                                   
+    def _executepathnzsql(self,commandparam) :
+        (scriptname,outfile,verify,addparam) = _getParam(commandparam)
+        exist(scriptname)
+        nzsqlpath = self._getnzsqlpath()
+        self._runcommand(nzsqlpath + " -f " + scriptname,commandparam)
+
     def _executenzsql(self,commandparam) :
         (scriptname,outfile,verify,addparam) = _getParam(commandparam)
         scriptpath=self._getFileName(scriptname)
@@ -145,14 +151,14 @@ class NZSQLScriptHelper :
         if self._sqlStarted() :
             self.sqlcommand = self.sqlcommand + " " + line.strip()
             return (None,None)       
-        TestCaseHelper.TestException(line + " unrecognized command, should start with "+str(listofc))
+        TestException(line + " unrecognized command, should start with "+str(listofc))
                    
     def run(self) :
         testfile = self._getFileName(NZTEST)
         p = lambda key : self._getP(key)
         logging.debug("Reading test scenario from %s",testfile)
-        lines = TestCaseHelper.readListOfLinesWithReplace(testfile, p)
-        listofc = [ NZSCRIPT,PATHSH,SQL,VERIFYCOM, RUNSH ]
+        lines = readListOfLinesWithReplace(testfile, p)
+        listofc = [ NZSCRIPT,PATHSH,SQL,VERIFYCOM, RUNSH, NZPATHSCRIPT ]
         for l in lines :
             (comm,param) = self._parseLine(l,listofc)
             if comm == None : continue;
@@ -162,10 +168,7 @@ class NZSQLScriptHelper :
             if comm == SQL : self._executesql(param)
             if comm == VERIFYCOM : self._verify(param)
             if comm == RUNSH : self._executesh(param)
-
-def printhelp():
-    print "Usage:"
-    print "prog /res dir/ /run dir/ /spec/ /testid/"
+            if comm == NZPATHSCRIPT : self._executepathnzsql(param)
 
 class NZPDATestCase(unittest.TestCase):
 
