@@ -1,5 +1,5 @@
 #
-# Copyright [2010] the stanislaw.bartkowski@gmail.com
+# Copyright [2016] the stanislaw.bartkowski@gmail.com
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -206,7 +206,7 @@ class ChangeDir :
         os.chdir(self.__dir)
         
 
-def runBin(param, com, binarywaited=None):
+def runBin(param, com, binarywaited=None,bash=False):
     """Launch command and wait for exit
 
 
@@ -223,7 +223,8 @@ def runBin(param, com, binarywaited=None):
     """
     d = ChangeDir(param)
     # os.system calls /bin/sh which does not recognized source command properly
-    res = os.system("/bin/bash " + com)
+    if isLinux() and bash : res = os.system("/bin/bash " + com)
+    else : res = os.system(com)
     logging.debug(com)
     if binarywaited != None : __waitforBin(binarywaited)
     d.restore()
